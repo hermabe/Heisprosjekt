@@ -7,4 +7,4 @@
  * Read buttons and add to queue
  * 
  * ****************/
-int read_buttons_and_light_up_buttos
+int read_buttons_and_light_up_buttos();

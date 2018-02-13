@@ -26,7 +26,7 @@ int main() {
         }
 
         //Light ups buttons that are pressed
-        read_buttons_and_light_up_button(elevator_location);
+        read_buttons_and_light_up_button();
         
         // Stop elevator and exit program if the stop button is pressed
         if (elev_get_stop_signal()) {

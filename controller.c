@@ -35,12 +35,14 @@ bool is_queue_empty(const bool queue[], const int size){
 }
 
 bool is_queue_empty(elev_motor_direction_t dir, const Controller ctrl){
-    assert(dir != DIRN_STOP);
     if (dir == DIRN_DOWN){
-        return is_queue_empty(ctrl.down_queue, ctrl.number_of_floors);
+        return is_queue_empty(ctrl.down_queue, N_FLOORS);
     }
     else if (dir == DIRN_UP){
-        return is_queue_empty(ctrl.up_queue, ctrl.number_of_floors);
+        return is_queue_empty(ctrl.up_queue, N_FLOORS);
+    }
+    else {
+        return is_queue_empty(ctrl.down_queue, N_FLOORS) && is_queue_empty(ctrl.up_queue, N_FLOORS);
     }
 
 }

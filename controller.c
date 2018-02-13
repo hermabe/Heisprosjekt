@@ -1,6 +1,5 @@
-#pragma once
 #include "controller.h"
-#include "elev.h"
+
 
 void startup()
 {

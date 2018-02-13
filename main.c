@@ -1,6 +1,6 @@
 #include "elev.h"
 #include <stdio.h>
-
+#include "buttonRead.h"
 
 int main() {
     // Initialize hardware

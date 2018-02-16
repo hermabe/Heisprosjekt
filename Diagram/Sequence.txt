@@ -1,6 +1,6 @@
 List for Sequence Diagram
 
-• Heisen	står	tom	og	stille	i	2.	etasje	med	døra	åpen
-• En	person	signaliserer	fra	1.	etasje	at	hun	ønsker	transport	oppover
-• Når	heisen	kommer,	bestiller	hun	transport	til	3.	etasje
-• Scenariet	avsluttes	når	heisen	befinner	seg	i	3.	etasje	og	heisdøra	åpnes
+• Heisen står tom og stille i 2. etasje med døra åpen
+• En person signaliserer fra 1. etasje at hun ønsker transport oppover
+• Når heisen kommer, bestiller hun transport til	3. etasje
+• Scenariet avsluttes når heisen befinner seg i 3. etasje og heisdøra åpnes

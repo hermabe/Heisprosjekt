@@ -6,7 +6,13 @@
 /**
  * Defines all possible states
  * */
-typedef enum tag_states {INIT, IDLE, STOP, UP, DOWN, UPWAIT, DOWNWAIT} State_t;
+typedef enum tag_states { INITSTATE,
+                          IDLESTATE,
+                          STOPSTATE,
+                          UPSTATE,
+                          DOWNSTATE,
+                          UPWAITSTATE,
+                          DOWNWAITSTATE } State_t;
 
 /**
  * Holds all the values for queue-system
@@ -44,10 +50,10 @@ void startup();
  * 
  */
 
-bool remove_floor(elev_motor_direction_t direction, Controller_t ctrl, int floor);
+bool remove_floor(elev_motor_direction_t direction, Controller_t *ctrl, int floor);
 
 /*
 * Check if one have reached a floor and checks queues and performes action
 */
 
-void reached_a_floor(elev_motor_direction_t direction, Controller_t ctrl);  
+void reached_a_floor(elev_motor_direction_t direction, Controller_t *ctrl);  

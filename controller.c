@@ -26,30 +26,30 @@ void startup() {
 }
 
 
-bool remove_floor(elev_motor_direction_t direction, Controller_t ctrl, int floor) {
+bool remove_floor(elev_motor_direction_t direction, Controller_t *ctrl, int floor) {
     assert(direction != DIRN_STOP);
-    if (direction == DIRN_UP && ctrl.up_queue[floor] == 1)
+    if (direction == DIRN_UP && ctrl->up_queue[floor] == 1)
     {
-        ctrl.up_queue[floor] = 0;
+        ctrl->up_queue[floor] = 0;
         return true;
     }
-    else if (direction == DIRN_UP && ctrl.down_queue[floor] == 1)
+    else if (direction == DIRN_UP && ctrl->down_queue[floor] == 1)
     {
-        ctrl.down_queue[floor] = 0;
+        ctrl->down_queue[floor] = 0;
         return true;
     } else {
         return false;
     }
 }
 
-void reached_a_floor(elev_motor_direction_t direction, Controller_t ctrl) {
+void reached_a_floor(elev_motor_direction_t direction, Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
     if (floor!=-1) {
         if (((direction == DIRN_UP) || (direction == DIRN_DOWN)) && remove_floor(direction, ctrl, floor)) {
             if (direction == DIRN_UP) {
-                ctrl.state = UPWAIT;
+                ctrl->state = UPWAITSTATE;
             } else if (direction == DIRN_DOWN) {
-                ctrl.state = DOWNWAIT;
+                ctrl->state = DOWNWAITSTATE;
             }
         }
     }
@@ -79,20 +79,20 @@ State_t up_or_down_from_idle(const Controller_t ctrl){
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
     bool is_down_empty = is_queue_empty(DIRN_DOWN, ctrl);
     if (is_down_empty && is_up_empty){
-        return IDLE;
+        return IDLESTATE;
     }
     assert(ctrl.current_floor <= 4 && ctrl.current_floor >= 1);
     switch (ctrl.current_floor){
         case 1:
-            return UP;
+            return UPSTATE;
         case 4:
-            return DOWN;
+            return DOWNSTATE;
         default:
             if (!is_up_empty){
-                return DOWN;
+                return DOWNSTATE;
             }
             else {
-                return UP;
+                return UPSTATE;
             }
     }
 }

@@ -24,6 +24,11 @@ typedef struct tag_controller{
     bool down_queue[4];
 } Controller_t;
 
+/***
+ * Resets buttons in the right direction
+*/
+void reset_lights(int floor);
+
 /**
  * Checks if queue is empty
  * @param dir Queue to check up/down/both

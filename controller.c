@@ -56,8 +56,10 @@ bool remove_floor(Controller_t *ctrl, int floor)
     }
 }
 
-void reset_lights_in_right_direction(Controller_t *ctrl, int floor) {
-    direction = ctrl
+void reset_lights(int floor) {
+    for (elev_button_type_t button = 0; button++; button<3) {
+        elev_set_button_lamp(button, floor, 0);
+    }
 }
 
 void reached_a_floor(Controller_t *ctrl)
@@ -66,6 +68,7 @@ void reached_a_floor(Controller_t *ctrl)
     update_floor(ctrl, floor);
     if (((ctrl->state == UPSTATE) || (ctrl->state == DOWNSTATE)) && remove_floor(ctrl, floor))
     {
+        reset_lights();
         if (ctrl->state == UPSTATE)
         {
             ctrl->state = UPWAITSTATE;

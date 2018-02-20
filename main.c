@@ -11,7 +11,7 @@ int main() {
 
 <<<<<<< HEAD
     startup();
-    
+
     elev_set_motor_direction(DIRN_UP);
 
      while (1) {

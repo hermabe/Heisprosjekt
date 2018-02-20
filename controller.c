@@ -1,7 +1,7 @@
 #include "controller.h"
 #include <assert.h>
 
-void startup()
+void startup(Controller_t *ctrl)
 {
     printf("Initializing elevator\n");
     // Initialize hardware
@@ -10,6 +10,8 @@ void startup()
         printf("Unable to initialize elevator hardware!\n");
         exit(1);
     }
+
+    initialize_controlstruct(ctrl, 0, IDLESTATE);
 
     // Put elevator in 1st floor
     elev_set_motor_direction(DIRN_DOWN);
@@ -71,6 +73,7 @@ void reached_a_floor(Controller_t *ctrl)
         }
     }
 }
+
 bool is_specific_queue_empty(const bool queue[], const int size)
 {
     for (int i = 0; i < size; ++i)
@@ -131,5 +134,15 @@ void check_stop(Controller_t* ctrl){
     elev_set_stop_lamp(is_stop_pressed);
     if (is_stop_pressed){
         ctrl->state = STOPSTATE;
+    }
+}
+
+void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
+    ctrl->current_floor = current_floor;
+    ctrl->state = state;
+
+    for (int i = 0; i < 4; ++i){
+        ctrl->down_queue[i] = 0;
+        ctrl->up_queue[i] = 0;
     }
 }

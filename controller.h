@@ -39,12 +39,23 @@ bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl);
 State_t up_or_down_from_idle(const Controller_t ctrl);
 
 /**
- * Initializes the hardware and puts the elevator in a known position (1st floor)
+ * Initializes the hardware and controlstruct and puts the elevator in a known position (1st floor)
+ * @param ctrl a control struct
  */
-void startup();
+void startup(Controller_t* ctrl);
+
+/**
+ * Initializes the controlstruct
+ * @param ctrl a controller
+ * @param current_floor the floor of the elevator
+ * @param state the state of the elevator
+ * */
+void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state);
 
 /*
-Updates currentfloor in ctrl and indicator light
+* Updates currentfloor in ctrl and indicator light
+* @param ctrl a control struct
+* @param floor to update
 */
 void update_floor(Controller_t *ctrl, int floor);
 
@@ -54,14 +65,14 @@ Checks stopsignal and changes state if true
 void check_stop();
 
 /****
- * Removes floor in the right direction
- * 
+ * Removes floor in the right direction 
+ * @param ctrl a control struct
+ * @param floor floor to remove
  */
-
 bool remove_floor(Controller_t *ctrl, int floor);
 
 /*
 * Check if one have reached a floor and checks queues and performes action
+* @param ctrl a control struct
 */
-
 void reached_a_floor(Controller_t *ctrl);

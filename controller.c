@@ -42,6 +42,7 @@ bool remove_floor(Controller_t *ctrl, int floor)
     if ((ctrl->state == UPSTATE) && ctrl->up_queue[floor] == 1)
     {
         ctrl->up_queue[floor] = 0;
+        
         return true;
     }
     else if ((ctrl->state == DOWNSTATE) && ctrl->down_queue[floor] == 1)
@@ -53,6 +54,10 @@ bool remove_floor(Controller_t *ctrl, int floor)
     {
         return false;
     }
+}
+
+void reset_lights_in_right_direction(Controller_t *ctrl, int floor) {
+    direction = ctrl
 }
 
 void reached_a_floor(Controller_t *ctrl)

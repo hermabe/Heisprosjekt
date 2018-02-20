@@ -126,3 +126,10 @@ State_t up_or_down_from_idle(const Controller_t ctrl)
     }
 }
 
+void check_stop(Controller_t* ctrl){
+    bool is_stop_pressed = elev_get_stop_signal();
+    elev_set_stop_lamp(is_stop_pressed);
+    if (is_stop_pressed){
+        ctrl->state = STOPSTATE;
+    }
+}

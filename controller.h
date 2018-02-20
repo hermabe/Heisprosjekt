@@ -48,6 +48,11 @@ Updates currentfloor in ctrl and indicator light
 */
 void update_floor(Controller_t *ctrl, int floor);
 
+/*
+Checks stopsignal and changes state if true
+*/
+void check_stop();
+
 /****
  * Removes floor in the right direction
  * 

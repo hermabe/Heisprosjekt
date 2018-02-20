@@ -1,13 +1,11 @@
 #include "elev.h"
 #include <stdio.h>
 #include "buttonRead.h"
+#include "controller.h"
 
 int main() {
     // Initialize hardware
-    if (!elev_init()) {
-        printf("Unable to initialize elevator hardware!\n");
-        return 1;
-    }
+    startup();
 
     printf("Press STOP button to stop elevator and exit program.\n");
 

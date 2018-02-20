@@ -27,6 +27,16 @@ void startup()
     printf("Initialization done\n");
 }
 
+void update_floor(Controller_t *ctrl, int floor)
+{
+    if (floor != -1)
+    {
+        printf("%d\n", floor);
+        ctrl->current_floor = floor;
+        elev_set_floor_indicator(floor);
+    }
+}
+
 bool remove_floor(Controller_t *ctrl, int floor)
 {
     if ((ctrl->state == UPSTATE) && ctrl->up_queue[floor] == 1)
@@ -116,9 +126,3 @@ State_t up_or_down_from_idle(const Controller_t ctrl)
     }
 }
 
-void update_floor(Controller_t *ctrl, int floor) {
-    if (floor != -1) {
-        ctrl->current_floor = floor;
-        elev_set_floor_indicator(floor);
-    }
-}

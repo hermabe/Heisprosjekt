@@ -9,12 +9,14 @@
 
 typedef struct tag_controller{
     unsigned int current_floor;
+    unsigned int state;
     bool up_queue[4];
     bool down_queue[4];
 } Controller;
 
 
 bool is_queue_empty(elev_motor_direction_t dir, const Controller ctrl);
+elev_motor_direction_t up_or_down_from_idle(const Controller ctrl);
 
 /**
  * Initializes the hardware and puts the elevator in a known position (1st floor)

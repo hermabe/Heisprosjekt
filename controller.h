@@ -43,7 +43,7 @@ State_t up_or_down_from_idle(const Controller_t ctrl);
  */
 void startup();
 
-
+void check_stop();
 
 /****
  * Removes floor in the right direction

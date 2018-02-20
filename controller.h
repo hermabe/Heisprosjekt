@@ -18,8 +18,18 @@ typedef struct tag_controller{
     bool down_queue[4];
 } Controller_t;
 
-
+/**
+ * Checks if queue is empty
+ * @param dir Queue to check up/down/both
+ * @param ctrl An elevator controller
+ * @return true if queue is empty
+ * */
 bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl);
+
+/**
+ * @param ctrl An elevator controller
+ * @return next state (IDLE/UP/DOWN)
+ * */
 State_t up_or_down_from_idle(const Controller_t ctrl);
 
 /**

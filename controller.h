@@ -30,6 +30,12 @@ typedef struct tag_controller{
 void reset_lights(int floor);
 
 /**
+ * Adds buttonpresses in the right queue
+ * 
+ */
+void add_floors(Controller_t *ctrl);
+
+/**
  * Checks if queue is empty
  * @param dir Queue to check up/down/both
  * @param ctrl An elevator controller

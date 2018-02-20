@@ -114,3 +114,10 @@ State_t up_or_down_from_idle(const Controller_t ctrl)
         }
     }
 }
+
+void update_floor(Controller_t *ctrl, int floor) {
+    if (floor != -1) {
+        ctrl->current_floor = floor;
+        elev_set_floor_indicator(floor);
+    }
+}

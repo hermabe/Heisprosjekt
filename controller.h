@@ -50,10 +50,10 @@ void startup();
  * 
  */
 
-bool remove_floor(elev_motor_direction_t direction, Controller_t *ctrl, int floor);
+bool remove_floor(Controller_t *ctrl, int floor);
 
 /*
 * Check if one have reached a floor and checks queues and performes action
 */
 
-void reached_a_floor(elev_motor_direction_t direction, Controller_t *ctrl);  
+void reached_a_floor(Controller_t *ctrl);

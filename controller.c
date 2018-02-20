@@ -70,7 +70,7 @@ void reached_a_floor(Controller_t *ctrl)
     update_floor(ctrl, floor);
     if (((ctrl->state == UPSTATE) || (ctrl->state == DOWNSTATE)) && remove_floor(ctrl, floor))
     {
-        reset_lights();
+        reset_lights(floor);
         if (ctrl->state == UPSTATE)
         {
             ctrl->state = UPWAITSTATE;
@@ -153,4 +153,10 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
         ctrl->down_queue[i] = 0;
         ctrl->up_queue[i] = 0;
     }
+}
+
+void swap_bool_array(bool* a, bool* b){
+    bool* temp = a;
+    b = a;
+    a = temp;
 }

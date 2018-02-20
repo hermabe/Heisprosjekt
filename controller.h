@@ -22,12 +22,21 @@ typedef struct tag_controller{
     State_t state;
     bool up_queue[4];
     bool down_queue[4];
+    bool up_queue_second[4];
+    bool down_queue_second[4];
 } Controller_t;
 
 /***
  * Resets buttons in the right direction
 */
 void reset_lights(int floor);
+
+/**
+ * Swaps two bool-arrays
+ * @param a an array
+ * @param b an array
+ * */
+void swap_bool_array(bool* a, bool* b);
 
 /**
  * Checks if queue is empty

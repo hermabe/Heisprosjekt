@@ -34,7 +34,7 @@ bool is_specific_queue_empty(const bool queue[], const int size){
     return true;
 }
 
-bool is_queue_empty(elev_motor_direction_t dir, const Controller ctrl){
+bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl){
     if (dir == DIRN_DOWN){
         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS);
     }
@@ -46,24 +46,24 @@ bool is_queue_empty(elev_motor_direction_t dir, const Controller ctrl){
     }
 }
 
-elev_motor_direction_t up_or_down_from_idle(const Controller ctrl){
+State_t up_or_down_from_idle(const Controller_t ctrl){
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
     bool is_down_empty = is_queue_empty(DIRN_DOWN, ctrl);
     if (is_down_empty && is_up_empty){
-        return DIRN_STOP;
+        return IDLE;
     }
     assert(ctrl.current_floor <= 4 && ctrl.current_floor >= 1);
     switch (ctrl.current_floor){
         case 1:
-            return DIRN_UP;
+            return UP;
         case 4:
-            return DIRN_DOWN;
+            return DOWN;
         default:
             if (!is_up_empty){
-                return DIRN_DOWN;
+                return DOWN;
             }
             else {
-                return DIRN_UP;
+                return UP;
             }
     }
 }

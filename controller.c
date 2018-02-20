@@ -48,6 +48,7 @@ bool remove_floor(Controller_t *ctrl, int floor)
 void reached_a_floor(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();
+    update_floor(ctrl, floor);
     if (((ctrl->state == UPSTATE) || (ctrl->state == DOWNSTATE)) && remove_floor(ctrl, floor))
     {
         if (ctrl->state == UPSTATE)

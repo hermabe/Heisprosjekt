@@ -6,7 +6,13 @@
 /**
  * Defines all possible states
  * */
-typedef enum tag_states {INIT, IDLE, STOP, UP, DOWN, UPWAIT, DOWNWAIT} State_t;
+typedef enum tag_states { INITSTATE,
+                          IDLESTATE,
+                          STOPSTATE,
+                          UPSTATE,
+                          DOWNSTATE,
+                          UPWAITSTATE,
+                          DOWNWAITSTATE } State_t;
 
 /**
  * Holds all the values for queue-system
@@ -36,4 +42,18 @@ State_t up_or_down_from_idle(const Controller_t ctrl);
  * Initializes the hardware and puts the elevator in a known position (1st floor)
  */
 void startup();
+
 void check_stop();
+
+/****
+ * Removes floor in the right direction
+ * 
+ */
+
+bool remove_floor(Controller_t *ctrl, int floor);
+
+/*
+* Check if one have reached a floor and checks queues and performes action
+*/
+
+void reached_a_floor(Controller_t *ctrl);

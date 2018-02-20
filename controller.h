@@ -36,3 +36,4 @@ State_t up_or_down_from_idle(const Controller_t ctrl);
  * Initializes the hardware and puts the elevator in a known position (1st floor)
  */
 void startup();
+void check_stop();

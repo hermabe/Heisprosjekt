@@ -43,7 +43,10 @@ State_t up_or_down_from_idle(const Controller_t ctrl);
  */
 void startup();
 
-
+/*
+Updates currentfloor in ctrl and indicator light
+*/
+void update_floor(Controller_t *ctrl, int floor);
 
 /****
  * Removes floor in the right direction

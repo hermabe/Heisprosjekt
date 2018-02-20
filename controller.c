@@ -1,5 +1,5 @@
 #include "controller.h"
-
+#include <assert.h>
 
 void startup() {
     printf("Initializing elevator\n");
@@ -26,23 +26,26 @@ void startup() {
 }
 
 
-bool remove_floor(elev_motor_direction_t direction, controller_t ctrl, floor) {
+bool remove_floor(elev_motor_direction_t direction, Controller_t ctrl, int floor) {
     assert(direction != DIRN_STOP);
-    if (direction == DIRN_UP && up_queue[floor] == 1)  {
-        up_queue[floor] = 0;
+    if (direction == DIRN_UP && ctrl.up_queue[floor] == 1)
+    {
+        ctrl.up_queue[floor] = 0;
         return true;
-    } else if (direction == DIRN_UP && down_queue[floor] == 1) {
-        down_queue[floor] = 0;
+    }
+    else if (direction == DIRN_UP && ctrl.down_queue[floor] == 1)
+    {
+        ctrl.down_queue[floor] = 0;
         return true;
     } else {
         return false;
     }
 }
 
-void reached_a_floor(elev_motor_direction_t direction, controller_t ctrl) {
-    int floor=(elev_get_floor_sensor_signal();
+void reached_a_floor(elev_motor_direction_t direction, Controller_t ctrl) {
+    int floor = elev_get_floor_sensor_signal();
     if (floor!=-1) {
-        if (((direction == DIRN_UP) || (direction == DIRN_DOWN)) && remove_floor()) {
+        if (((direction == DIRN_UP) || (direction == DIRN_DOWN)) && remove_floor(direction, ctrl, floor)) {
             if (direction == DIRN_UP) {
                 ctrl.state = UPWAIT;
             } else if (direction == DIRN_DOWN) {

@@ -252,9 +252,13 @@ void run(Controller_t* ctrl){
                 elev_set_motor_direction(DIRN_STOP);
                 reset_button_lights();
                 clear_orders(ctrl);
+                if (elev_get_floor_sensor_signal != -1){
+                    elev_set_door_open_lamp(1);
+                }
                 while (elev_get_stop_signal()) {}
                 elev_set_stop_lamp(0);
                 ctrl->state = IDLESTATE;                
+
             case IDLESTATE:
                 up_or_down_from_idle(ctrl);
                 break;
@@ -302,5 +306,11 @@ void clear_orders(Controller_t* ctrl){
         for (int j = 0; j < 4; ++j){
             ctrl->queues[i][j] = 0;
         }
+    }
+}
+
+void open_door_if_at_floor(){
+    if (elev_get_floor_sensor_signal() == -1){
+        elev_set_door_open_lamp(1);
     }
 }

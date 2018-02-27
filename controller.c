@@ -158,7 +158,7 @@ bool is_queue_empty(const bool queue[], const int size)
     return true;
 }
 
-State_t up_or_down_from_idle(const Controller_t ctrl)
+State_t up_or_down_from_idle(Controller_t* ctrl)
 {
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
     bool is_down_empty = is_queue_empty(DIRN_DOWN, ctrl);

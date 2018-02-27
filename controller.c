@@ -319,3 +319,15 @@ void open_door_if_at_floor(){
         elev_set_door_open_lamp(1);
     }
 }
+
+elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor){    
+    if (ctrl->current_floor > floor){
+        return DIRN_UP;
+    }
+    else if (ctrl->current_floor < floor){
+        return DIRN_DOWN;
+    }
+    else {
+        return (elev_motor_direction_t)((int)(ctrl->direction) * -1);
+    }
+}

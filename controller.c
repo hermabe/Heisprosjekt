@@ -86,27 +86,27 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
         case BUTTON_CALL_UP: {
             if above_elevator {
                 if direction >= 0 {
-                    ctrl->queues[0][floor] = true;
+                    ctrl->queues[0][floor] = true; //Add in primary queue
                 } else {
-                    ctrl->queues[2][floor] = true;
+                    ctrl->queues[2][floor] = true; //Add in extra queue
                 }
             } else {
                 if direction > 0 {
-                    ctrl->queues[1][floor] = true;
+                    ctrl->queues[1][floor] = true; //Add in secondary queue
                 }
             }
         }
         case BUTTON_CALL_DOWN: {
             if above_elevator {
                 if direction > 0 {
-                    ctrl->queues[1][floor] = true;
+                    ctrl->queues[1][floor] = true; 
                 }
             } else {
                 
                 if direction <= 0 {
-                    ctrl->queues[0][floor] = true;
-                } else {
-                    ctrl->queues[2][floor] = true;
+                    ctrl->queues[0][floor] = true; 
+                } else { 
+                    ctrl->queues[2][floor] = true; 
                 }
             }
         }

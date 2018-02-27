@@ -117,3 +117,5 @@ int find_extreme_in_primary(const Controller_t* ctrl);
  * @param ctrl a ControllerStuct
  * */
 void run(Controller_t* ctrl);
+
+void toggle_direction(Controller_t* ctrl);

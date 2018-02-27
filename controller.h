@@ -28,13 +28,13 @@ typedef struct tag_controller{
  * Resets buttons at a floor
  *
 */
-void reset_lights(int floor);
+void reset_button_lights_at_floor(int floor);
 
 /***
  * Resets all light except lamp
  *
 */
-void reset_all_lights_except_stop_lamp();
+void reset_button_lights_except_stop_lamp();
 /**
  * Rotates the queues
  * @param ctrl a ControlStruct
@@ -44,7 +44,7 @@ void rotate_queues(Controller_t* ctrl);
  * Adds buttonpresses in the right queue
  * 
  */
-void add_floors(Controller_t *ctrl);
+void add_floorss_in_queue(Controller_t *ctrl);
 
 /***
  * Takes in button and floor, finds direction and places it in the right queue

@@ -5,7 +5,8 @@
 
 int main() {
     // Initialize hardware
-    startup();
+    Controller_t ctrl;
+    startup(&ctrl);
 
     printf("Press STOP button to stop elevator and exit program.\n");
 

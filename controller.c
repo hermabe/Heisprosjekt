@@ -152,22 +152,6 @@ bool is_queue_empty(const bool queue[], const int size)
     return true;
 }
 
-// bool is_queue_empty(elev_motor_ctrl->direction_t dir, const Controller_t ctrl)
-// {
-//     if (dir == DIRN_DOWN)
-//     {
-//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS);
-//     }
-//     else if (dir == DIRN_UP)
-//     {
-//         return is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-//     }
-//     else
-//     {
-//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS) && is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-//     }
-// }
-
 State_t up_or_down_from_idle(const Controller_t ctrl)
 {
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
@@ -200,6 +184,9 @@ void check_stop(Controller_t* ctrl){
     elev_set_stop_lamp(is_stop_pressed);
     if (is_stop_pressed){
         ctrl->state = STOPSTATE;
+    }
+    while (elev_get_stop_signal()) {
+        
     }
 }
 

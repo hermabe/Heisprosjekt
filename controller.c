@@ -289,3 +289,14 @@ void run(Controller_t* ctrl){
         }
     }
 }
+
+void toggle_direction(Controller_t* ctrl){
+    if (ctrl->direction == DIRN_UP){
+        ctrl->direction = DIRN_DOWN;
+        elev_set_motor_direction(DIRN_DOWN);
+    }
+    else if (ctrl->direction == DIRN_DOWN){
+        ctrl->direction = DIRN_UP;
+        elev_set_motor_direction(DIRN_UP);
+    }
+}

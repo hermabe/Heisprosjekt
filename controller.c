@@ -24,7 +24,6 @@ void startup(Controller_t *ctrl)
             exit(0);
         }
     }
-    elev_set_motor_direction(DIRN_UP);
     elev_set_motor_direction(DIRN_STOP);
     printf("Initialization done\n");
 }
@@ -206,7 +205,7 @@ void check_stop(Controller_t* ctrl){
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
     ctrl->current_floor = current_floor;
     ctrl->state = state;
-    ctrl->ctrl->direction = DIRN_STOP;
+    ctrl->direction = DIRN_STOP;
 
     for (int i = 0; i < 3; ++i){
         for (int j = 0; j < 4; ++j){
@@ -242,4 +241,50 @@ int find_extreme_in_primary(const Controller_t* ctrl){
         }
     }
     return -1;
+}
+
+void run(Controller_t* ctrl){    
+    while(true){
+        // To be run every loop
+        check_stop(ctrl);        
+        read_buttons_and_light_up_button();
+        add_floors_in_queue(ctrl);
+
+        switch (ctrl->state){
+            case STOPSTATE:
+                elev_set_motor_direction(DIRN_STOP);
+                reset_button_lights();
+                clear_orders(ctrl);
+                while (elev_get_stop_signal()) {}
+                elev_set_stop_lamp(0);
+                ctrl->state = IDLESTATE;                
+            case IDLESTATE:
+                up_or_down_from_idle(ctrl);
+                break;
+            case UPSTATE: 
+            case DOWNSTATE:
+                reached_a_floor(ctrl);
+                if (is_all_queues_empty(ctrl)){
+                    ctrl->state = IDLESTATE;
+                }
+                else if (is_queue_empty(ctrl->queues[0], 4)){
+                    rotate_queues(ctrl);
+                    toggle_direction(ctrl);
+                }
+                else {
+                    int extreme = find_extreme_in_primary(ctrl);
+                    elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
+                    elev_set_motor_direction(direction);
+                    ctrl->direction = direction;                    
+                }
+                break;
+            case UPWAITSTATE:
+            case DOWNWAITSTATE:
+                wait_at_floor(ctrl);
+                ctrl->state = IDLESTATE;
+                break;
+            default:
+                break;
+        }
+    }
 }

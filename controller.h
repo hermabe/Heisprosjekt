@@ -105,3 +105,9 @@ void reached_a_floor(Controller_t *ctrl);
  * @return most extreme floor
  * */
 int find_extreme_in_primary(const Controller_t* ctrl);
+
+/**
+ * Handles orders and controls the elevator
+ * @param ctrl a ControllerStuct
+ * */
+void run(Controller_t* ctrl);

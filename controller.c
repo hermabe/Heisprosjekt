@@ -40,21 +40,9 @@ void update_floor(Controller_t *ctrl, int floor)
 
 bool remove_floor(Controller_t *ctrl, int floor)
 {
-    if ((ctrl->state == UPSTATE) && ctrl->up_queue[floor] == 1)
-    {
-        ctrl->up_queue[floor] = 0;
-        
-        return true;
-    }
-    else if ((ctrl->state == DOWNSTATE) && ctrl->down_queue[floor] == 1)
-    {
-        ctrl->down_queue[floor] = 0;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    for (unsigned int queue = 0; queue < 3; queue++) {
+        ctrl->queues[queue][floor] = 0;
+    }   
 }
 
 void reset_button_lights_at_floor(int floor) {

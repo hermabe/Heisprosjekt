@@ -59,6 +59,8 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
  * */
 bool is_queue_empty(const bool queue[], const int size);
 
+bool is_all_queues_empty(Controller_t *ctrl);
+
 /**
  * @param ctrl An elevator controller
  * @return next state (IDLE/UP/DOWN)

@@ -157,6 +157,15 @@ bool is_queue_empty(const bool queue[], const int size)
     return true;
 }
 
+bool is_all_queues_empty(Controller_t *ctrl) {
+    for (int queue = 0; queue < 3; queue++) {
+        if (!is_queue_empty(queues[queue], 4)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 State_t up_or_down_from_idle(Controller_t* ctrl)
 {
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);

@@ -123,3 +123,5 @@ void run(Controller_t* ctrl);
 void toggle_direction(Controller_t* ctrl);
 
 void clear_orders(Controller_t* ctrl);
+
+elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor);

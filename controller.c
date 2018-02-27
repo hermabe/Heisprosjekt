@@ -63,37 +63,61 @@ void reset_lights(int floor) {
 }
 
 void add_floors(Controller_t *ctrl) {
-    position = ctrl->current_floor;
+    elev_motor_direction_t direction = crtl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
         for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {
             bool above_elevator = false;
-            if (floor<position) {
-                above_elevator = true;
-            }
+            
             button_pressed = elev_get_button_lamp(button, floor);
             if button_pressed {
-                switch (button) {
-                    case BUTTON_CALL_UP: {
-                        if above_elevator {
-                            ctrl->up_queue[floor] = true;
-                        } else {
-                            ctrl->down_queue[floor] = true;
-                        }
-                    }
-                    case BUTTON_CALL_DOWN: {
-                        if above_elevator {
-                            ctrl->down_queue[floor] = true;
-                        } else {
-                            ctrl->up_queue[floor] = true;
-                        }
-                    }
-                    case BUTTON_COMMAND: {
-                        if above_elevator {
-                            ctrl->up_queue[floor] = true;
-                        } else {
-                            ctrl->down_queue[floor] = true;
-                        }
-                    }
+                add_button_to_queue(ctrl, button, floor)
+            }
+        }
+    }
+}
+
+void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor) {
+    if (floor<ctrl->current_floor) {
+        above_elevator = true;
+    }
+    switch (button) {
+        case BUTTON_CALL_UP: {
+            if above_elevator {
+                if direction >= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            } else {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
+                }
+            }
+        }
+        case BUTTON_CALL_DOWN: {
+            if above_elevator {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
+                }
+            } else {
+                
+                if direction <= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            }
+        }
+        case BUTTON_COMMAND: {
+            if above_elevator {
+                if direction <= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            } else {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
                 }
             }
         }

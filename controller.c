@@ -185,9 +185,8 @@ void check_stop(Controller_t* ctrl){
     if (is_stop_pressed){
         ctrl->state = STOPSTATE;
     }
-    while (elev_get_stop_signal()) {
-        
-    }
+    while (elev_get_stop_signal()) {}
+    
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {

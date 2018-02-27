@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+#ignore settings
+c_cpp_properties.json
+
 # Pictures
 *.png
 

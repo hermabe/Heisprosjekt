@@ -196,11 +196,7 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
     ctrl->state = state;
     ctrl->direction = DIRN_STOP;
 
-    for (int i = 0; i < 3; ++i){
-        for (int j = 0; j < 4; ++j){
-            ctrl->queues[i][j] = 0;
-        }
-    }
+    clear_orders(ctrl);
 }
 
 void rotate_queues(Controller_t* ctrl){
@@ -286,5 +282,13 @@ void toggle_direction(Controller_t* ctrl){
     else if (ctrl->direction == DIRN_DOWN){
         ctrl->direction = DIRN_UP;
         elev_set_motor_direction(DIRN_UP);
+    }
+}
+
+void clear_orders(Controller_t* ctrl){
+    for (int i = 0; i < 3; ++i){
+        for (int j = 0; j < 4; ++j){
+            ctrl->queues[i][j] = 0;
+        }
     }
 }

@@ -64,6 +64,12 @@ void reset_lights(int floor) {
     }
 }
 
+void reset_all_lights_except_stop_light() {
+    for (int floor=0; floor < 4; floor++) {
+        reset_lights(floor);
+    }
+}
+
 void add_floors(Controller_t *ctrl) {
     elev_motor_ctrl->direction_t ctrl->direction = ctrl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
@@ -186,7 +192,7 @@ void check_stop(Controller_t* ctrl){
         ctrl->state = STOPSTATE;
     }
     while (elev_get_stop_signal()) {}
-    
+
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {

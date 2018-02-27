@@ -70,7 +70,7 @@ void reached_a_floor(Controller_t *ctrl)
     update_floor(ctrl, floor);
     if (((ctrl->state == UPSTATE) || (ctrl->state == DOWNSTATE)) && remove_floor(ctrl, floor))
     {
-        reset_lights();
+        reset_lights(floor);
         if (ctrl->state == UPSTATE)
         {
             ctrl->state = UPWAITSTATE;
@@ -82,7 +82,7 @@ void reached_a_floor(Controller_t *ctrl)
     }
 }
 
-bool is_specific_queue_empty(const bool queue[], const int size)
+bool is_queue_empty(const bool queue[], const int size)
 {
     for (int i = 0; i < size; ++i)
     {
@@ -94,21 +94,21 @@ bool is_specific_queue_empty(const bool queue[], const int size)
     return true;
 }
 
-bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl)
-{
-    if (dir == DIRN_DOWN)
-    {
-        return is_specific_queue_empty(ctrl.down_queue, N_FLOORS);
-    }
-    else if (dir == DIRN_UP)
-    {
-        return is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-    }
-    else
-    {
-        return is_specific_queue_empty(ctrl.down_queue, N_FLOORS) && is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-    }
-}
+// bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl)
+// {
+//     if (dir == DIRN_DOWN)
+//     {
+//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS);
+//     }
+//     else if (dir == DIRN_UP)
+//     {
+//         return is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
+//     }
+//     else
+//     {
+//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS) && is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
+//     }
+// }
 
 State_t up_or_down_from_idle(const Controller_t ctrl)
 {
@@ -148,9 +148,22 @@ void check_stop(Controller_t* ctrl){
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
     ctrl->current_floor = current_floor;
     ctrl->state = state;
+    ctrl->direction = DIRN_STOP;
 
-    for (int i = 0; i < 4; ++i){
-        ctrl->down_queue[i] = 0;
-        ctrl->up_queue[i] = 0;
+    for (int i = 0; i < 3; ++i){
+        for (int j = 0; j < 4; ++j){
+            ctrl->queues[i][j] = 0;
+        }
     }
+}
+
+void rotate_queues(Controller_t* ctrl){
+    bool** primary = &ctrl->queues[0];
+    bool** secondary = &ctrl->queues[1];
+    bool** extra = &ctrl->queues[2];
+
+    bool** temp = *primary;
+    *primary = *secondary;
+    *secondary = *extra;
+    *extra = *temp;
 }

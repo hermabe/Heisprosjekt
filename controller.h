@@ -19,9 +19,9 @@ typedef enum tag_states { INITSTATE,
  **/
 typedef struct tag_controller{
     unsigned int current_floor;
+    elev_motor_direction_t direction;
     State_t state;
-    bool up_queue[4];
-    bool down_queue[4];
+    bool queues[3][4];
 } Controller_t;
 
 /***
@@ -30,12 +30,18 @@ typedef struct tag_controller{
 void reset_lights(int floor);
 
 /**
+ * Rotates the queues
+ * @param ctrl a ControlStruct
+ * */
+void rotate_queues(Controller_t* ctrl);
+
+/**
  * Checks if queue is empty
- * @param dir Queue to check up/down/both
- * @param ctrl An elevator controller
+ * @param queue a bool array to check
+ * @param size size of array
  * @return true if queue is empty
  * */
-bool is_queue_empty(elev_motor_direction_t dir, const Controller_t ctrl);
+bool is_queue_empty(const bool queue[], const int size);
 
 /**
  * @param ctrl An elevator controller

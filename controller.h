@@ -9,10 +9,8 @@
 typedef enum tag_states { INITSTATE,
                           IDLESTATE,
                           STOPSTATE,
-                          UPSTATE,
-                          DOWNSTATE,
-                          UPWAITSTATE,
-                          DOWNWAITSTATE } State_t;
+                          MOVESTATE,
+                          WAITSTATE } State_t;
 
 /**
  * Holds all the values for queue-system

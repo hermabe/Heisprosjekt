@@ -178,28 +178,19 @@ bool is_all_queues_empty(Controller_t *ctrl) {
 
 State_t up_or_down_from_idle(Controller_t* ctrl)
 {
-    bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
-    bool is_down_empty = is_queue_empty(DIRN_DOWN, ctrl);
-    if (is_down_empty && is_up_empty)
-    {
-        return IDLESTATE;
+    if (is_all_queues_empty(ctrl)){
+        ctrl->state = IDLESTATE;
     }
-    assert(ctrl.current_floor <= 4 && ctrl.current_floor >= 1);
-    switch (ctrl.current_floor)
-    {
-    case 1:
-        return UPSTATE;
-    case 4:
-        return DOWNSTATE;
-    default:
-        if (!is_up_empty)
-        {
-            return DOWNSTATE;
-        }
-        else
-        {
-            return UPSTATE;
-        }
+    else if (is_queue_empty(ctrl->queues[0], 4)){
+        rotate_queues(ctrl);
+        toggle_direction(ctrl);
+    }
+    else {
+        int extreme = find_extreme_in_primary(ctrl);
+        elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
+        elev_set_motor_direction(direction);
+        ctrl->state = MOVESTATE;
+        ctrl->direction = direction;                    
     }
 }
 

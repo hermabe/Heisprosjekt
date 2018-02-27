@@ -97,3 +97,11 @@ bool remove_floor(Controller_t *ctrl, int floor);
 * @param ctrl a control struct
 */
 void reached_a_floor(Controller_t *ctrl);
+
+
+/**
+ * Find the floor with order furthest from endpoints. Returns -1 if no orders
+ * @param a ControllerStruct
+ * @return most extreme floor
+ * */
+int find_extreme_in_primary(const Controller_t* ctrl);

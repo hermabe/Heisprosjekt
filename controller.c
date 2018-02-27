@@ -225,3 +225,21 @@ void rotate_queues(Controller_t* ctrl){
     *secondary = *extra;
     *extra = *temp;
 }
+
+int find_extreme_in_primary(const Controller_t* ctrl){
+    if (ctrl->direction == DIRN_DOWN){
+        for(int i = 0; i < 4; ++i){
+            if (ctrl->queues[0][i]){
+                return i;
+            }
+        }
+    }
+    else{
+        for(int i = 3; i >= 0; --i){
+            if (ctrl->queues[0][i]){
+                return i;
+            }
+        }
+    }
+    return -1;
+}

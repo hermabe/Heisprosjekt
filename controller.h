@@ -25,10 +25,16 @@ typedef struct tag_controller{
 } Controller_t;
 
 /***
- * Resets buttons in the right direction
+ * Resets buttons at a floor
+ *
 */
 void reset_lights(int floor);
 
+/***
+ * Resets all light except lamp
+ *
+*/
+void reset_all_lights_except_stop_lamp();
 /**
  * Rotates the queues
  * @param ctrl a ControlStruct

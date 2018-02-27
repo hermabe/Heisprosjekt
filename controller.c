@@ -63,6 +63,12 @@ void reset_lights(int floor) {
     }
 }
 
+void reset_all_lights_except_stop_light() {
+    for (int floor=0; floor < 4; floor++) {
+        reset_lights(floor);
+    }
+}
+
 void add_floors(Controller_t *ctrl) {
     elev_motor_ctrl->direction_t ctrl->direction = ctrl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
@@ -151,22 +157,6 @@ bool is_queue_empty(const bool queue[], const int size)
     return true;
 }
 
-// bool is_queue_empty(elev_motor_ctrl->direction_t dir, const Controller_t ctrl)
-// {
-//     if (dir == DIRN_DOWN)
-//     {
-//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS);
-//     }
-//     else if (dir == DIRN_UP)
-//     {
-//         return is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-//     }
-//     else
-//     {
-//         return is_specific_queue_empty(ctrl.down_queue, N_FLOORS) && is_specific_queue_empty(ctrl.up_queue, N_FLOORS);
-//     }
-// }
-
 State_t up_or_down_from_idle(const Controller_t ctrl)
 {
     bool is_up_empty = is_queue_empty(DIRN_UP, ctrl);
@@ -200,6 +190,8 @@ void check_stop(Controller_t* ctrl){
     if (is_stop_pressed){
         ctrl->state = STOPSTATE;
     }
+    while (elev_get_stop_signal()) {}
+
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {

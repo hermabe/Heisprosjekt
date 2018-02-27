@@ -4,7 +4,7 @@
 // 2007, Martin Korsgaard
 #ifndef __INCLUDE_DRIVER_H__
 #define __INCLUDE_DRIVER_H__
-
+#include <stdbool.h>
 
 // Number of floors
 #define N_FLOORS 4
@@ -80,6 +80,7 @@ int elev_get_floor_sensor_signal(void);
   @param floor Which floor lamp to turn on. Other floor lamps are turned off.
 */
 void elev_set_floor_indicator(int floor);
+
 
 /**
   Button types for function elev_set_button_lamp() and elev_get_button().

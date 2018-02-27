@@ -34,6 +34,16 @@ void reset_lights(int floor);
  * @param ctrl a ControlStruct
  * */
 void rotate_queues(Controller_t* ctrl);
+/*
+ * Adds buttonpresses in the right queue
+ * 
+ */
+void add_floors(Controller_t *ctrl);
+
+/***
+ * 
+ */
+void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor);
 
 /**
  * Checks if queue is empty

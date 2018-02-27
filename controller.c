@@ -64,6 +64,68 @@ void reset_lights(int floor) {
     }
 }
 
+void add_floors(Controller_t *ctrl) {
+    elev_motor_direction_t direction = crtl->direction;
+    for (unsigned int floor = 0; floor++; floor < 4) {
+        for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {
+            bool above_elevator = false;
+            
+            button_pressed = elev_get_button_lamp(button, floor);
+            if button_pressed {
+                add_button_to_queue(ctrl, button, floor)
+            }
+        }
+    }
+}
+
+void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor) {
+    if (floor<ctrl->current_floor) {
+        above_elevator = true;
+    }
+    switch (button) {
+        case BUTTON_CALL_UP: {
+            if above_elevator {
+                if direction >= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            } else {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
+                }
+            }
+        }
+        case BUTTON_CALL_DOWN: {
+            if above_elevator {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
+                }
+            } else {
+                
+                if direction <= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            }
+        }
+        case BUTTON_COMMAND: {
+            if above_elevator {
+                if direction <= 0 {
+                    ctrl->queues[0][floor] = true;
+                } else {
+                    ctrl->queues[2][floor] = true;
+                }
+            } else {
+                if direction > 0 {
+                    ctrl->queues[1][floor] = true;
+                }
+            }
+        }
+    }
+}
+
 void reached_a_floor(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();

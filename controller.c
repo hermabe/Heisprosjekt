@@ -68,7 +68,7 @@ void add_floors(Controller_t *ctrl) {
     elev_motor_direction_t direction = crtl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
         for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {
-            bool above_elevator = false;
+            
             
             button_pressed = elev_get_button_lamp(button, floor);
             if button_pressed {
@@ -79,8 +79,11 @@ void add_floors(Controller_t *ctrl) {
 }
 
 void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor) {
+    bool above_elevator
     if (floor<ctrl->current_floor) {
-        bool above_elevator = true;
+        above_elevator = true;
+    } else {
+        above_elevator = false;
     }
     switch (button) {
         case BUTTON_CALL_UP: {

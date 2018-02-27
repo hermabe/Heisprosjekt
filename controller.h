@@ -24,6 +24,9 @@ typedef struct tag_controller{
     bool queues[3][4];
 } Controller_t;
 
+
+void wait_at_floor(Controller_t *ctrl);
+
 /***
  * Resets buttons at a floor
  *

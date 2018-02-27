@@ -1,5 +1,6 @@
 #include "controller.h"
 #include <assert.h>
+#include <time.h>
 
 void startup(Controller_t *ctrl)
 {
@@ -28,6 +29,21 @@ void startup(Controller_t *ctrl)
     printf("Initialization done\n");
 }
 
+void wait_at_floor(Controller_t *ctrl) {
+    elev_set_door_open_lamp(1);
+    int msec = 0;
+    int trigger = 3000;
+    clock_t before = clock()
+    do {
+        check_stop(ctrl);        
+        read_buttons_and_light_up_button();
+        add_floors_in_queue(ctrl);
+        clock_t difference = clock() - before;
+        msec = difference * 1000 / CLOCKS_PER_SEC;
+    } while (msec < difference)
+    elev_set_door_open_lamp(0);
+}
+
 void update_floor(Controller_t *ctrl, int floor)
 {
     if (floor != -1)
@@ -40,9 +56,15 @@ void update_floor(Controller_t *ctrl, int floor)
 
 bool remove_floor(Controller_t *ctrl, int floor)
 {
-    for (unsigned int queue = 0; queue < 3; queue++) {
-        ctrl->queues[queue][floor] = 0;
-    }   
+    
+    if (ctrl->queues[0][floor]){
+        for (queue = 0; queue < 3; queue++) {
+            ctrl->queues[queue] = 0;
+        }   
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void reset_button_lights_at_floor(int floor) {
@@ -196,7 +218,11 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
     ctrl->state = state;
     ctrl->direction = DIRN_STOP;
 
-    clear_orders(ctrl);
+    for (int i = 0; i < 3; ++i){
+        for (int j = 0; j < 4; ++j){
+            ctrl->queues[i][j] = 0;
+        }
+    }
 }
 
 void rotate_queues(Controller_t* ctrl){
@@ -282,13 +308,5 @@ void toggle_direction(Controller_t* ctrl){
     else if (ctrl->direction == DIRN_DOWN){
         ctrl->direction = DIRN_UP;
         elev_set_motor_direction(DIRN_UP);
-    }
-}
-
-void clear_orders(Controller_t* ctrl){
-    for (int i = 0; i < 3; ++i){
-        for (int j = 0; j < 4; ++j){
-            ctrl->queues[i][j] = 0;
-        }
     }
 }

@@ -58,7 +58,7 @@ bool remove_floor(Controller_t *ctrl, int floor)
     }
 }
 
-void reset_lights(int floor) {
+void reset_button_lights_at_floor(int floor) {
     for (elev_button_type_t button = 0; button++; button<3) {
         elev_set_button_lamp(button, floor, 0);
     }
@@ -66,11 +66,11 @@ void reset_lights(int floor) {
 
 void reset_all_lights_except_stop_light() {
     for (int floor=0; floor < 4; floor++) {
-        reset_lights(floor);
+        reset_button_lights_at_floor(floor);
     }
 }
 
-void add_floors(Controller_t *ctrl) {
+void add_floors_in_queue(Controller_t *ctrl) {
     elev_motor_ctrl->direction_t ctrl->direction = ctrl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
         for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {            

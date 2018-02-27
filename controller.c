@@ -33,14 +33,15 @@ void wait_at_floor(Controller_t *ctrl) {
     elev_set_door_open_lamp(1);
     int msec = 0;
     int trigger = 3000;
-    clock_t before = clock()
+    clock_t before = clock();
+    clock_t difference;
     do {
         check_stop(ctrl);        
         read_buttons_and_light_up_button();
         add_floors_in_queue(ctrl);
-        clock_t difference = clock() - before;
+        difference = clock() - before;
         msec = difference * 1000 / CLOCKS_PER_SEC;
-    } while (msec < difference)
+    } while (msec < difference);
     elev_set_door_open_lamp(0);
 }
 
@@ -55,11 +56,10 @@ void update_floor(Controller_t *ctrl, int floor)
 }
 
 bool remove_floor(Controller_t *ctrl, int floor)
-{
-    
+{    
     if (ctrl->queues[0][floor]){
-        for (queue = 0; queue < 3; queue++) {
-            ctrl->queues[queue] = 0;
+        for (int queue = 0; queue < 3; queue++) {
+            ctrl->queues[queue][floor] = 0;
         }   
         return true;
     } else {
@@ -80,7 +80,7 @@ void reset_all_lights_except_stop_light() {
 }
 
 void add_floors_in_queue(Controller_t *ctrl) {
-    elev_motor_ctrl->direction_t ctrl->direction = ctrl->direction;
+    elev_motor_direction_t direction = ctrl->direction;
     for (unsigned int floor = 0; floor++; floor < 4) {
         for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {            
             if (elev_get_button_lamp(button, floor)) {
@@ -141,17 +141,10 @@ void reached_a_floor(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();
     update_floor(ctrl, floor);
-    if (((ctrl->state == UPSTATE) || (ctrl->state == DOWNSTATE)) && remove_floor(ctrl, floor))
+    if (ctrl->state == MOVESTATE && remove_floor(ctrl, floor))
     {
         reset_lights(floor);
-        if (ctrl->state == UPSTATE)
-        {
-            ctrl->state = UPWAITSTATE;
-        }
-        else if (ctrl->state == DOWNSTATE)
-        {
-            ctrl->state = DOWNWAITSTATE;
-        }
+        ctrl->state = WAITSTATE;
     }
 }
 
@@ -169,7 +162,7 @@ bool is_queue_empty(const bool queue[], const int size)
 
 bool is_all_queues_empty(Controller_t *ctrl) {
     for (int queue = 0; queue < 3; queue++) {
-        if (!is_queue_empty(queues[queue], 4)) {
+        if (!is_queue_empty(ctrl->queues[queue], 4)) {
             return false;
         }
     }
@@ -267,8 +260,7 @@ void run(Controller_t* ctrl){
             case IDLESTATE:
                 up_or_down_from_idle(ctrl);
                 break;
-            case UPSTATE: 
-            case DOWNSTATE:
+            case MOVESTATE:
                 reached_a_floor(ctrl);
                 if (is_all_queues_empty(ctrl)){
                     ctrl->state = IDLESTATE;
@@ -284,8 +276,7 @@ void run(Controller_t* ctrl){
                     ctrl->direction = direction;                    
                 }
                 break;
-            case UPWAITSTATE:
-            case DOWNWAITSTATE:
+            case WAITSTATE:
                 wait_at_floor(ctrl);
                 ctrl->state = IDLESTATE;
                 break;

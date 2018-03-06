@@ -50,7 +50,7 @@ void update_floor(Controller_t *ctrl, int floor)
 {
     if (floor != -1)
     {
-        printf("%d\n", floor);
+        // printf("%d\n", floor);
         ctrl->current_floor = floor;
         elev_set_floor_indicator(floor);
     }
@@ -189,13 +189,9 @@ void up_or_down_from_idle(Controller_t* ctrl)
 }
 
 void check_stop(Controller_t* ctrl){
-    bool is_stop_pressed = elev_get_stop_signal();
-    elev_set_stop_lamp(is_stop_pressed);
-    if (is_stop_pressed){
+    if (elev_get_stop_signal()) {
         ctrl->state = STOPSTATE;
     }
-    while (elev_get_stop_signal()) {}
-
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
@@ -239,16 +235,24 @@ int find_extreme_in_primary(const Controller_t* ctrl){
     return -1;
 }
 
-void run(Controller_t* ctrl){    
+void run(Controller_t* ctrl){
+    int count = 0;
     while(true){
         // To be run every loop
         check_stop(ctrl);        
         read_buttons_and_light_up_button();
         add_floors_in_queue(ctrl);
+        //printf("%d\n", count);
+        if (++count > 1000){
+            //printf("\t%d\n", ctrl->state);
+            count = 0;
+        }
 
         switch (ctrl->state){
             case STOPSTATE:
+                printf("STOPSTATE\n");
                 elev_set_motor_direction(DIRN_STOP);
+                elev_set_stop_lamp(1);
                 reset_all_lights_except_stop_light();
                 clear_orders(ctrl);
                 if (elev_get_floor_sensor_signal() != -1){
@@ -260,8 +264,10 @@ void run(Controller_t* ctrl){
 
             case IDLESTATE:
                 up_or_down_from_idle(ctrl);
+                printf("IDLE\n");
                 break;
             case MOVESTATE:
+                printf("MOVESTATE\n");
                 reached_a_floor(ctrl);
                 if (is_all_queues_empty(ctrl)){
                     ctrl->state = IDLESTATE;
@@ -274,10 +280,11 @@ void run(Controller_t* ctrl){
                     int extreme = find_extreme_in_primary(ctrl);
                     elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
                     elev_set_motor_direction(direction);
-                    ctrl->direction = direction;                    
+                    ctrl->direction = direction;
                 }
                 break;
             case WAITSTATE:
+                printf("WAITSTATE\n");
                 wait_at_floor(ctrl);
                 ctrl->state = IDLESTATE;
                 break;
@@ -313,10 +320,10 @@ void open_door_if_at_floor(){
 }
 
 elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor){    
-    if (ctrl->current_floor > floor){
+    if (ctrl->current_floor < floor){
         return DIRN_UP;
     }
-    else if (ctrl->current_floor < floor){
+    else if (ctrl->current_floor > floor){
         return DIRN_DOWN;
     }
     else {

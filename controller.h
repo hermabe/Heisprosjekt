@@ -1,5 +1,6 @@
 #pragma once
 #include "elev.h"
+#include "queue.h"
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -25,42 +26,22 @@ typedef struct tag_controller{
 
 void wait_at_floor(Controller_t *ctrl);
 
-/***
+/**
  * Resets buttons at a floor
- *
+ * @param floor the floor to reset all buttons
 */
 void reset_button_lights_at_floor(int floor);
 
-/***
+/**
  * Resets all light except lamp
- *
 */
 void reset_button_lights_except_stop_lamp();
-/**
- * Rotates the queues
- * @param ctrl a ControlStruct
- * */
-void rotate_queues(Controller_t* ctrl);
-/*
- * Adds buttonpresses in the right queue
- * 
- */
-void add_floors_in_queue(Controller_t *ctrl);
 
-/***
+
+/**
  * Takes in button and floor, finds direction and places it in the right queue
  */
 void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor);
-
-/**
- * Checks if queue is empty
- * @param queue a bool array to check
- * @param size size of array
- * @return true if queue is empty
- * */
-bool is_queue_empty(const bool queue[], const int size);
-
-bool is_all_queues_empty(Controller_t *ctrl);
 
 /**
  * @param ctrl An elevator controller
@@ -123,8 +104,4 @@ void run(Controller_t* ctrl);
 
 void toggle_direction(Controller_t* ctrl);
 
-void clear_orders(Controller_t* ctrl);
-
 elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor);
-
-void print_queue(Controller_t* ctrl);

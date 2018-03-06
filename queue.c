@@ -27,7 +27,7 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
 
     // Alternative version
     int queueSelectorArray[18] = {1, 0, 2, 1, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 1, 1, 0, 0};
-    int index = button*6 + floor_above_elevator*3 + (1 + (ctrl->direction > 0) - (ctrl->direction < 0));
+    int index = button*6 + floor_above_elevator*3 + 1 + ctrl->direction;
     int queue = queueSelectorArray[index];
     ctrl->queues[queue][floor] = true;
     return;

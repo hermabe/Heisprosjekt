@@ -42,7 +42,7 @@ void wait_at_floor(Controller_t *ctrl) {
         add_floors_in_queue(ctrl);
         difference = clock() - before;
         msec = difference * 1000 / CLOCKS_PER_SEC;
-    } while (msec < difference);
+    } while (msec < trigger);
     elev_set_door_open_lamp(0);
 }
 
@@ -81,9 +81,10 @@ void reset_all_lights_except_stop_light() {
 }
 
 void add_floors_in_queue(Controller_t *ctrl) {
-    elev_motor_direction_t direction = ctrl->direction;
-    for (unsigned int floor = 0; floor++; floor < 4) {
-        for(elev_button_type_t button=BUTTON_CALL_UP; button++; button <= BUTTON_COMMAND) {            
+    for (unsigned int floor = 0; floor < 4;floor ++)
+    {
+        for (elev_button_type_t button = BUTTON_CALL_UP; button <= BUTTON_COMMAND; button++)
+        {
             if (elev_get_button_lamp(button, floor)) {
                 add_button_to_queue(ctrl, button, floor);
             }
@@ -137,14 +138,13 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
         }
     }
 }
-
 void reached_a_floor(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();
     update_floor(ctrl, floor);
     if (ctrl->state == MOVESTATE && remove_floor(ctrl, floor))
     {
-        reset_lights(floor);
+        reset_button_lights_at_floor(floor);
         ctrl->state = WAITSTATE;
     }
 }
@@ -170,7 +170,7 @@ bool is_all_queues_empty(Controller_t *ctrl) {
     return true;
 }
 
-State_t up_or_down_from_idle(Controller_t* ctrl)
+void up_or_down_from_idle(Controller_t* ctrl)
 {
     if (is_all_queues_empty(ctrl)){
         ctrl->state = IDLESTATE;
@@ -249,9 +249,9 @@ void run(Controller_t* ctrl){
         switch (ctrl->state){
             case STOPSTATE:
                 elev_set_motor_direction(DIRN_STOP);
-                reset_button_lights();
+                reset_all_lights_except_stop_light();
                 clear_orders(ctrl);
-                if (elev_get_floor_sensor_signal != -1){
+                if (elev_get_floor_sensor_signal() != -1){
                     elev_set_door_open_lamp(1);
                 }
                 while (elev_get_stop_signal()) {}

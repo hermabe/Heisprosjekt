@@ -11,7 +11,6 @@ void read_buttons_and_light_up_button() {
             if (elev_get_button_signal(button, floor)==1) {
                 elev_set_button_lamp(button, floor, 1);
             }
-
         }
     }
 }

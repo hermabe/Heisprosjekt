@@ -101,18 +101,24 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
             } else {
                 if (ctrl->direction > 0) {
                     ctrl->queues[2][floor] = true; //Add in extra queue
-                } else {
+                } else if (ctrl->direction < 0){
                     ctrl->queues[1][floor] = true; //add in secondary queue
+                } else {
+                    ctrl->queues[0][floor] = true;
                 }
             }
+            break;
         }
         case BUTTON_CALL_DOWN: {
             if (floor_above_elevator) {
                 if (ctrl->direction > 0) {
                     ctrl->queues[1][floor] = true; 
-                } else {
+                } else if (ctrl->direction < 0){
                     ctrl->queues[2][floor] = true;
+                } else {
+                    ctrl->queues[0][floor] = true;
                 }
+                
             } else {
                 
                 if (ctrl->direction <= 0) {
@@ -121,6 +127,7 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
                     ctrl->queues[1][floor] = true; 
                 }
             }
+            break;
         }
         case BUTTON_COMMAND: {
             if (floor_above_elevator) {
@@ -188,7 +195,7 @@ void up_or_down_from_idle(Controller_t* ctrl)
         elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
         elev_set_motor_direction(direction);
         ctrl->state = MOVESTATE;
-        ctrl->direction = direction;                    
+        ctrl->direction = direction;             
     }
 }
 
@@ -218,7 +225,7 @@ void rotate_queues(Controller_t* ctrl){
         temp = ctrl->queues[0][i];
         ctrl->queues[0][i] = ctrl->queues[1][i];
         ctrl->queues[1][i] = ctrl->queues[2][i];
-        ctrl->queues[0][i] = temp;
+        ctrl->queues[2][i] = temp;
     }
 }
 
@@ -285,11 +292,9 @@ void run(Controller_t* ctrl){
 void toggle_direction(Controller_t* ctrl){
     if (ctrl->direction == DIRN_UP){
         ctrl->direction = DIRN_DOWN;
-        elev_set_motor_direction(DIRN_DOWN);
     }
     else if (ctrl->direction == DIRN_DOWN){
         ctrl->direction = DIRN_UP;
-        elev_set_motor_direction(DIRN_UP);
     }
 }
 

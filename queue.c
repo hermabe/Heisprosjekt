@@ -101,3 +101,30 @@ bool is_all_queues_empty(Controller_t *ctrl) {
     }
     return true;
 }
+
+int find_extreme_in_primary(const Controller_t* ctrl){
+    if (ctrl->direction == DIRN_DOWN){
+        for(int i = 0; i < 4; ++i){
+            if (ctrl->queues[0][i])
+            {
+                return i;
+            }
+        }
+    }
+    else{
+        for(int i = 3; i >= 0; --i){
+            if (ctrl->queues[0][i]){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void clear_orders(Controller_t* ctrl){
+    for (int i = 0; i < 3; ++i){
+        for (int j = 0; j < 4; ++j){
+            ctrl->queues[i][j] = 0;
+        }
+    }
+}

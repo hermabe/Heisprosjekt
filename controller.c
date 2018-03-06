@@ -63,18 +63,6 @@ bool remove_floor(Controller_t *ctrl, int floor)
     }
 }
 
-void reset_button_lights_at_floor(int floor) {
-    for (elev_button_type_t button = 0; button < 3; ++button) {
-        elev_set_button_lamp(button, floor, 0);
-    }
-}
-
-void reset_all_lights_except_stop_light() {
-    for (int floor=0; floor < 4; floor++) {
-        reset_button_lights_at_floor(floor);
-    }
-}
-
 bool if_reached_a_floor_stop(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();
@@ -124,25 +112,6 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
             ctrl->queues[i][j] = 0;
         }
     }
-}
-
-int find_extreme_in_primary(const Controller_t* ctrl){
-    if (ctrl->direction == DIRN_DOWN){
-        for(int i = 0; i < 4; ++i){
-            if (ctrl->queues[0][i])
-            {
-                return i;
-            }
-        }
-    }
-    else{
-        for(int i = 3; i >= 0; --i){
-            if (ctrl->queues[0][i]){
-                return i;
-            }
-        }
-    }
-    return -1;
 }
 
 void activate_stop(Controller_t* ctrl){
@@ -195,14 +164,6 @@ void toggle_direction(Controller_t* ctrl){
     }
 }
 
-void clear_orders(Controller_t* ctrl){
-    for (int i = 0; i < 3; ++i){
-        for (int j = 0; j < 4; ++j){
-            ctrl->queues[i][j] = 0;
-        }
-    }
-}
-
 void open_door_if_at_floor(){
     if (elev_get_floor_sensor_signal() == -1){
         elev_set_door_open_lamp(1);
@@ -218,14 +179,5 @@ elev_motor_direction_t get_direction_from_current_and_destination_floor(Controll
     }
     else {
         return (elev_motor_direction_t)((int)(ctrl->direction) * -1);
-    }
-}
-
-void print_queue(Controller_t *ctrl){
-    for (int i = 0; i < 4; ++i){
-        for (int j = 0; j < 3; ++j){
-            printf("%d ", ctrl->queues[j][i]);
-        }
-        printf("\n");
     }
 }

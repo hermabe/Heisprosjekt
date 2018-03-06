@@ -14,7 +14,7 @@ typedef enum tag_states { INITSTATE,
                           WAITSTATE } State_t;
 
 /**
- * Holds all the values for queue-system
+ * Holds all the values required to control elevator
  **/
 typedef struct tag_controller{
     unsigned int current_floor;
@@ -25,23 +25,6 @@ typedef struct tag_controller{
 
 
 void wait_at_floor(Controller_t *ctrl);
-
-/**
- * Resets buttons at a floor
- * @param floor the floor to reset all buttons
-*/
-void reset_button_lights_at_floor(int floor);
-
-/**
- * Resets all light except lamp
-*/
-void reset_button_lights_except_stop_lamp();
-
-
-/**
- * Takes in button and floor, finds direction and places it in the right queue
- */
-void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor);
 
 /**
  * @param ctrl An elevator controller
@@ -88,13 +71,6 @@ bool remove_floor(Controller_t *ctrl, int floor);
 * @return true if floor removed from queue
 */
 bool if_reached_a_floor_stop(Controller_t *ctrl);
-
-/**
- * Find the floor with order furthest from endpoints. Returns -1 if no orders
- * @param a ControllerStruct
- * @return most extreme floor
- * */
-int find_extreme_in_primary(const Controller_t* ctrl);
 
 /**
  * Handles orders and controls the elevator

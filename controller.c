@@ -1,6 +1,7 @@
 #include "controller.h"
 #include <assert.h>
 #include <time.h>
+#include <stdlib.h>
 
 void startup(Controller_t *ctrl)
 {
@@ -68,7 +69,7 @@ bool remove_floor(Controller_t *ctrl, int floor)
 }
 
 void reset_button_lights_at_floor(int floor) {
-    for (elev_button_type_t button = 0; button++; button<3) {
+    for (elev_button_type_t button = 0; button < 3; ++button) {
         elev_set_button_lamp(button, floor, 0);
     }
 }

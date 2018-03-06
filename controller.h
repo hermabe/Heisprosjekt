@@ -66,7 +66,7 @@ bool is_all_queues_empty(Controller_t *ctrl);
  * @param ctrl An elevator controller
  * @return next state (IDLE/UP/DOWN)
  * */
-State_t up_or_down_from_idle(const Controller_t ctrl);
+State_t up_or_down_from_idle(Controller_t* ctrl);
 
 /**
  * Initializes the hardware and controlstruct and puts the elevator in a known position (1st floor)

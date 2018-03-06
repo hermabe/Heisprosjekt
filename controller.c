@@ -17,15 +17,7 @@ void startup(Controller_t *ctrl)
 
     // Put elevator in 1st floor
     elev_set_motor_direction(DIRN_DOWN);
-    while (elev_get_floor_sensor_signal() != (int)0)
-    {
-        if (elev_get_stop_signal())
-        {
-            elev_set_motor_direction(DIRN_STOP);
-            printf("Startup aborted\n");
-            exit(0);
-        }
-    }
+    while (elev_get_floor_sensor_signal() != (int)0) {}
     elev_set_motor_direction(DIRN_STOP);
     printf("Initialization done\n");
 }
@@ -221,15 +213,6 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
 }
 
 void rotate_queues(Controller_t* ctrl){
-    // bool** primary = &ctrl->queues[0];
-    // bool** secondary = &ctrl->queues[1];
-    // bool** extra = &ctrl->queues[2];
-
-    // bool** temp = *primary;
-    // *primary = *secondary;
-    // *secondary = *extra;
-    // *extra = *temp;
-
     bool temp;
     for (int i = 0; i < 4; ++i){
         temp = ctrl->queues[0][i];
@@ -242,7 +225,8 @@ void rotate_queues(Controller_t* ctrl){
 int find_extreme_in_primary(const Controller_t* ctrl){
     if (ctrl->direction == DIRN_DOWN){
         for(int i = 0; i < 4; ++i){
-            if (ctrl->queues[0][i]){
+            if (ctrl->queues[0][i])
+            {
                 return i;
             }
         }

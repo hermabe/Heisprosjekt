@@ -92,7 +92,7 @@ void update_floor(Controller_t *ctrl, int floor);
 /*
 Checks stopsignal and changes state if true
 */
-void check_stop(Controller_t* ctrl);
+bool check_stop(Controller_t* ctrl);
 
 /****
  * Removes floor in the right direction 

@@ -38,13 +38,16 @@ void wait_at_floor(Controller_t *ctrl) {
     clock_t before = clock();
     clock_t difference;
     do {
-        check_stop(ctrl);        
+        if (check_stop(ctrl)){
+            return;
+        }        
         read_buttons_and_light_up_button();
         add_floors_in_queue(ctrl);
         difference = clock() - before;
         msec = difference * 1000 / CLOCKS_PER_SEC;
     } while (msec < trigger);
     elev_set_door_open_lamp(0);
+    ctrl->state = IDLESTATE;
 }
 
 void update_floor(Controller_t *ctrl, int floor)
@@ -197,10 +200,12 @@ void up_or_down_from_idle(Controller_t* ctrl)
     }
 }
 
-void check_stop(Controller_t* ctrl){
+bool check_stop(Controller_t* ctrl){
     if (elev_get_stop_signal()) {
         ctrl->state = STOPSTATE;
+        return true;
     }
+    return false;
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
@@ -252,26 +257,32 @@ int find_extreme_in_primary(const Controller_t* ctrl){
     return -1;
 }
 
+void activate_stop(Controller_t* ctrl){
+    elev_set_motor_direction(DIRN_STOP);
+    elev_set_stop_lamp(1);
+    reset_all_lights_except_stop_light();
+    clear_orders(ctrl);
+    if (elev_get_floor_sensor_signal() != -1)
+    {
+        elev_set_door_open_lamp(1);
+    }
+    while (elev_get_stop_signal())
+    {
+    }
+    elev_set_stop_lamp(0);
+    ctrl->state = IDLESTATE;
+}
+
 void run(Controller_t* ctrl){
     while(true){
-        // To be run every loop
         check_stop(ctrl);        
         read_buttons_and_light_up_button();
         add_floors_in_queue(ctrl);
 
         switch (ctrl->state){
             case STOPSTATE:
-                elev_set_motor_direction(DIRN_STOP);
-                elev_set_stop_lamp(1);
-                reset_all_lights_except_stop_light();
-                clear_orders(ctrl);
-                if (elev_get_floor_sensor_signal() != -1){
-                    elev_set_door_open_lamp(1);
-                }
-                while (elev_get_stop_signal()) {}
-                elev_set_stop_lamp(0);
-                ctrl->state = IDLESTATE;                
-
+                activate_stop(ctrl);
+                break;  
             case IDLESTATE:
                 up_or_down_from_idle(ctrl);             
                 break;
@@ -279,8 +290,7 @@ void run(Controller_t* ctrl){
                 if_reached_a_floor_stop(ctrl);
                 break;
             case WAITSTATE:
-                wait_at_floor(ctrl);
-                ctrl->state = IDLESTATE;
+                wait_at_floor(ctrl);                
                 break;
             default:
                 break;

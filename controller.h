@@ -104,9 +104,9 @@ bool remove_floor(Controller_t *ctrl, int floor);
 /*
 * Check if one have reached a floor and checks queues and performes action
 * @param ctrl a control struct
+* @return true if floor removed from queue
 */
-void reached_a_floor(Controller_t *ctrl);
-
+bool if_reached_a_floor_stop(Controller_t *ctrl);
 
 /**
  * Find the floor with order furthest from endpoints. Returns -1 if no orders
@@ -126,3 +126,5 @@ void toggle_direction(Controller_t* ctrl);
 void clear_orders(Controller_t* ctrl);
 
 elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor);
+
+void print_queue(Controller_t* ctrl);

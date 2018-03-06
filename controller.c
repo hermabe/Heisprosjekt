@@ -31,6 +31,7 @@ void startup(Controller_t *ctrl)
 }
 
 void wait_at_floor(Controller_t *ctrl) {
+    elev_set_motor_direction(DIRN_STOP);
     elev_set_door_open_lamp(1);
     int msec = 0;
     int trigger = 3000;
@@ -50,7 +51,6 @@ void update_floor(Controller_t *ctrl, int floor)
 {
     if (floor != -1)
     {
-        // printf("%d\n", floor);
         ctrl->current_floor = floor;
         elev_set_floor_indicator(floor);
     }
@@ -93,52 +93,59 @@ void add_floors_in_queue(Controller_t *ctrl) {
 }
 
 void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor) {
-    bool above_elevator = (floor < ctrl->current_floor);
+    bool floor_above_elevator = (floor > ctrl->current_floor);
 
     switch (button) {
         case BUTTON_CALL_UP: {
-            if (above_elevator) {
+            if (floor_above_elevator) {
                 if (ctrl->direction >= 0) {
                     ctrl->queues[0][floor] = true; //Add in primary queue
                 } else {
-                    ctrl->queues[2][floor] = true; //Add in extra queue
+                    ctrl->queues[1][floor] = true; //Add in secondary queue
                 }
             } else {
                 if (ctrl->direction > 0) {
-                    ctrl->queues[1][floor] = true; //Add in secondary queue
+                    ctrl->queues[2][floor] = true; //Add in extra queue
+                } else {
+                    ctrl->queues[1][floor] = true; //add in secondary queue
                 }
             }
         }
         case BUTTON_CALL_DOWN: {
-            if (above_elevator) {
+            if (floor_above_elevator) {
                 if (ctrl->direction > 0) {
                     ctrl->queues[1][floor] = true; 
+                } else {
+                    ctrl->queues[2][floor] = true;
                 }
             } else {
                 
                 if (ctrl->direction <= 0) {
                     ctrl->queues[0][floor] = true; 
                 } else { 
-                    ctrl->queues[2][floor] = true; 
+                    ctrl->queues[1][floor] = true; 
                 }
             }
         }
         case BUTTON_COMMAND: {
-            if (above_elevator) {
-                if (ctrl->direction <= 0) {
-                    ctrl->queues[0][floor] = true;
+            if (floor_above_elevator) {
+                if (ctrl->direction < 0) {
+                    ctrl->queues[1][floor] = true;
                 } else {
-                    ctrl->queues[2][floor] = true;
+                    ctrl->queues[0][floor] = true;
                 }
             } else {
                 if (ctrl->direction > 0) {
                     ctrl->queues[1][floor] = true;
+                } else {
+                    ctrl->queues[0][floor] = true;
                 }
             }
         }
     }
 }
-void reached_a_floor(Controller_t *ctrl)
+
+bool if_reached_a_floor_stop(Controller_t *ctrl)
 {
     int floor = elev_get_floor_sensor_signal();
     update_floor(ctrl, floor);
@@ -146,7 +153,9 @@ void reached_a_floor(Controller_t *ctrl)
     {
         reset_button_lights_at_floor(floor);
         ctrl->state = WAITSTATE;
+        return true;
     }
+    return false;
 }
 
 bool is_queue_empty(const bool queue[], const int size)
@@ -207,14 +216,22 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
 }
 
 void rotate_queues(Controller_t* ctrl){
-    bool** primary = &ctrl->queues[0];
-    bool** secondary = &ctrl->queues[1];
-    bool** extra = &ctrl->queues[2];
+    // bool** primary = &ctrl->queues[0];
+    // bool** secondary = &ctrl->queues[1];
+    // bool** extra = &ctrl->queues[2];
 
-    bool** temp = *primary;
-    *primary = *secondary;
-    *secondary = *extra;
-    *extra = *temp;
+    // bool** temp = *primary;
+    // *primary = *secondary;
+    // *secondary = *extra;
+    // *extra = *temp;
+
+    bool temp;
+    for (int i = 0; i < 4; ++i){
+        temp = ctrl->queues[0][i];
+        ctrl->queues[0][i] = ctrl->queues[1][i];
+        ctrl->queues[1][i] = ctrl->queues[2][i];
+        ctrl->queues[0][i] = temp;
+    }
 }
 
 int find_extreme_in_primary(const Controller_t* ctrl){
@@ -236,21 +253,14 @@ int find_extreme_in_primary(const Controller_t* ctrl){
 }
 
 void run(Controller_t* ctrl){
-    int count = 0;
     while(true){
         // To be run every loop
         check_stop(ctrl);        
         read_buttons_and_light_up_button();
         add_floors_in_queue(ctrl);
-        //printf("%d\n", count);
-        if (++count > 1000){
-            //printf("\t%d\n", ctrl->state);
-            count = 0;
-        }
 
         switch (ctrl->state){
             case STOPSTATE:
-                printf("STOPSTATE\n");
                 elev_set_motor_direction(DIRN_STOP);
                 elev_set_stop_lamp(1);
                 reset_all_lights_except_stop_light();
@@ -263,28 +273,12 @@ void run(Controller_t* ctrl){
                 ctrl->state = IDLESTATE;                
 
             case IDLESTATE:
-                up_or_down_from_idle(ctrl);
-                printf("IDLE\n");
+                up_or_down_from_idle(ctrl);             
                 break;
             case MOVESTATE:
-                printf("MOVESTATE\n");
-                reached_a_floor(ctrl);
-                if (is_all_queues_empty(ctrl)){
-                    ctrl->state = IDLESTATE;
-                }
-                else if (is_queue_empty(ctrl->queues[0], 4)){
-                    rotate_queues(ctrl);
-                    toggle_direction(ctrl);
-                }
-                else {
-                    int extreme = find_extreme_in_primary(ctrl);
-                    elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
-                    elev_set_motor_direction(direction);
-                    ctrl->direction = direction;
-                }
+                if_reached_a_floor_stop(ctrl);
                 break;
             case WAITSTATE:
-                printf("WAITSTATE\n");
                 wait_at_floor(ctrl);
                 ctrl->state = IDLESTATE;
                 break;
@@ -328,5 +322,14 @@ elev_motor_direction_t get_direction_from_current_and_destination_floor(Controll
     }
     else {
         return (elev_motor_direction_t)((int)(ctrl->direction) * -1);
+    }
+}
+
+void print_queue(Controller_t *ctrl){
+    for (int i = 0; i < 4; ++i){
+        for (int j = 0; j < 3; ++j){
+            printf("%d ", ctrl->queues[j][i]);
+        }
+        printf("\n");
     }
 }

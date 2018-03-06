@@ -26,12 +26,6 @@ typedef struct tag_controller{
 void wait_at_floor(Controller_t *ctrl);
 
 /**
- * @param ctrl An elevator controller
- * @return next state (IDLE/UP/DOWN)
- * */
-void up_or_down_from_idle(Controller_t* ctrl);
-
-/**
  * Initializes the hardware and controlstruct and puts the elevator in a known position (1st floor)
  * @param ctrl a control struct
  */
@@ -69,7 +63,7 @@ bool remove_floor(Controller_t *ctrl, int floor);
 * @param ctrl a control struct
 * @return true if floor removed from queue
 */
-bool if_reached_a_floor_stop(Controller_t *ctrl);
+bool stop_if_reached_a_floor(Controller_t *ctrl);
 
 /**
  * Handles orders and controls the elevator

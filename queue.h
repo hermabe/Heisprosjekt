@@ -38,3 +38,9 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
  * @return most extreme floor
  * */
 int find_extreme_in_primary(const Controller_t* ctrl);
+
+/**
+ * Updates controller state
+ * @param ctrl An elevator controller
+ * */
+void up_or_down_from_idle(Controller_t* ctrl);

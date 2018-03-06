@@ -1,6 +1,4 @@
-#include "elev.h"
 #include <stdio.h>
-#include "buttonRead.h"
 #include "controller.h"
 
 int main() {

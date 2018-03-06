@@ -3,8 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-void startup(Controller_t *ctrl)
-{
+void startup(Controller_t *ctrl) {
     printf("Initializing elevator\n");
     // Initialize hardware
     if (!elev_init())
@@ -42,8 +41,7 @@ void wait_at_floor(Controller_t *ctrl) {
     ctrl->state = IDLESTATE;
 }
 
-void update_floor(Controller_t *ctrl, int floor)
-{
+void update_floor(Controller_t *ctrl, int floor) {
     if (floor != -1)
     {
         ctrl->current_floor = floor;
@@ -51,8 +49,7 @@ void update_floor(Controller_t *ctrl, int floor)
     }
 }
 
-bool remove_floor(Controller_t *ctrl, int floor)
-{    
+bool remove_floor(Controller_t *ctrl, int floor) {    
     if (ctrl->queues[0][floor]){
         for (int queue = 0; queue < 3; queue++) {
             ctrl->queues[queue][floor] = 0;
@@ -63,8 +60,7 @@ bool remove_floor(Controller_t *ctrl, int floor)
     }
 }
 
-bool if_reached_a_floor_stop(Controller_t *ctrl)
-{
+bool stop_if_reached_a_floor(Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
     update_floor(ctrl, floor);
     if (ctrl->state == MOVESTATE && remove_floor(ctrl, floor))
@@ -74,24 +70,6 @@ bool if_reached_a_floor_stop(Controller_t *ctrl)
         return true;
     }
     return false;
-}
-
-void up_or_down_from_idle(Controller_t* ctrl)
-{
-    if (is_all_queues_empty(ctrl)){
-        ctrl->state = IDLESTATE;
-    }
-    else if (is_queue_empty(ctrl->queues[0], 4)){
-        rotate_queues(ctrl);
-        toggle_direction(ctrl);
-    }
-    else {
-        int extreme = find_extreme_in_primary(ctrl);
-        elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
-        elev_set_motor_direction(direction);
-        ctrl->state = MOVESTATE;
-        ctrl->direction = direction;             
-    }
 }
 
 bool check_stop(Controller_t* ctrl){
@@ -144,7 +122,7 @@ void run(Controller_t* ctrl){
                 up_or_down_from_idle(ctrl);             
                 break;
             case MOVESTATE:
-                if_reached_a_floor_stop(ctrl);
+                stop_if_reached_a_floor(ctrl);
                 break;
             case WAITSTATE:
                 wait_at_floor(ctrl);                

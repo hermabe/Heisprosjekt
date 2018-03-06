@@ -128,3 +128,20 @@ void clear_orders(Controller_t* ctrl){
         }
     }
 }
+
+void up_or_down_from_idle(Controller_t* ctrl) {
+    if (is_all_queues_empty(ctrl)){
+        ctrl->state = IDLESTATE;
+    }
+    else if (is_queue_empty(ctrl->queues[0], 4)){
+        rotate_queues(ctrl);
+        toggle_direction(ctrl);
+    }
+    else {
+        int extreme = find_extreme_in_primary(ctrl);
+        elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
+        elev_set_motor_direction(direction);
+        ctrl->state = MOVESTATE;
+        ctrl->direction = direction;             
+    }
+}

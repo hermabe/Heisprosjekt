@@ -7,8 +7,7 @@
 /**
  * Defines all possible states
  * */
-typedef enum tag_states { INITSTATE,
-                          IDLESTATE,
+typedef enum tag_states { IDLESTATE,
                           STOPSTATE,
                           MOVESTATE,
                           WAITSTATE } State_t;

@@ -69,6 +69,7 @@ int find_extreme_in_primary(const Controller_t* ctrl){
             }
         }
     }
+    // If no orders return -1
     return -1;
 }
 

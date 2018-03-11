@@ -1,6 +1,3 @@
 # Heisprosjekt
 Heisprosjektet i TTK4235 - Tilpassede Datasystemer
-
-
-
-Her skal vi jobbe
+Gjennomført Våren 2018, 2. året på Sivilingeniørstudiet i Kybernetikk og Robotikk på NTNU

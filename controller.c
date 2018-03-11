@@ -110,7 +110,7 @@ void run(Controller_t* ctrl){
     while(true){
         check_stop(ctrl);        
         read_buttons_and_light_up_buttons();
-        add_floors_in_queue(ctrl);
+        add_floors_in_queue_from_lights(ctrl);
 
         switch (ctrl->state){
             case STOPSTATE:

@@ -5,15 +5,16 @@
 
 /**
  * Rotates the queues
+ * Primary->Extra->Secondary->Primary
  * @param ctrl a ControlStruct
  * */
 void rotate_queues(Controller_t* ctrl);
+
 /*
  * Adds buttonpresses in the right queue
- * 
+ * @param ctrl a ControlStruct
  */
 void add_floors_in_queue(Controller_t *ctrl);
-
 
 /**
  * Checks if queue is empty
@@ -23,12 +24,24 @@ void add_floors_in_queue(Controller_t *ctrl);
  * */
 bool is_queue_empty(const bool queue[], const int size);
 
+/**
+ * Checks if all elements in all queues are zero
+ * @param ctrl a ControlStruct
+ * @return true if all queues are zero
+ * */
 bool is_all_queues_empty(Controller_t *ctrl);
 
+/**
+ * Sets all elements in all queues to zero
+ * @param ctrl a ControlStruct
+ * */
 void clear_orders(Controller_t* ctrl);
 
 /**
- * Takes in button and floor, finds direction and places it in the right queue
+ * Adds an order in the right queue
+ * @param ctrl a ControlStruct
+ * @param button the type of button
+ * @param floor the floor the button is on
  */
 void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor);
 

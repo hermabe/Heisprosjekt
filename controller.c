@@ -117,7 +117,7 @@ void run(Controller_t* ctrl){
                 activate_stop(ctrl);
                 break;  
             case IDLESTATE:
-                up_or_down_from_idle(ctrl);             
+                up_or_down_from_idle(ctrl);      
                 break;
             case MOVESTATE:
                 stop_if_reached_a_floor(ctrl);
@@ -126,6 +126,8 @@ void run(Controller_t* ctrl){
                 wait_at_floor(ctrl);                
                 break;
             default:
+                //Not supposed to happen, but if it does, it stops the elevator, because something is wrong
+                ctrl->state = STOPSTATE
                 break;
         }
     }

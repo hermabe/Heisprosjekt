@@ -117,7 +117,7 @@ void run(Controller_t* ctrl){
                 activate_stop(ctrl);
                 break;  
             case IDLESTATE:
-                up_or_down_from_idle(ctrl);      
+                decide_next_elev_movement_from_queue(ctrl);      
                 break;
             case MOVESTATE:
                 stop_if_reached_a_floor(ctrl);

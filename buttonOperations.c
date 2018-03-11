@@ -3,7 +3,7 @@
 void read_buttons_and_light_up_buttons() {
     for (int floor=0; floor<N_FLOORS;floor++) {
         for (elev_button_type_t button = BUTTON_CALL_UP; button < 3; button++) {
-            if (elev_get_button_signal(button, floor)==1) {
+            if (elev_get_button_signal(button, floor)) {
                 elev_set_button_lamp(button, floor, 1);
             }
         }
@@ -11,7 +11,7 @@ void read_buttons_and_light_up_buttons() {
 }
 
 void reset_button_lights_at_floor(int floor) {
-    for (elev_button_type_t button = 0; button < 3; ++button) {
+    for (elev_button_type_t button = 0; button < 3; button++) {
         elev_set_button_lamp(button, floor, 0);
     }
 }

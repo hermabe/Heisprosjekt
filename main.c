@@ -3,7 +3,7 @@
 
 int main() {
     Controller_t ctrl;
-    startup(&ctrl); // Initialize
+    startup(&ctrl);
     run(&ctrl);
     return 0;
 }

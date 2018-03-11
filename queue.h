@@ -14,7 +14,7 @@ void rotate_queues(Controller_t* ctrl);
  * Adds buttonpresses in the right queue
  * @param ctrl a ControlStruct
  */
-void add_floors_in_queue(Controller_t *ctrl);
+void add_floors_in_queue_from_lights(Controller_t *ctrl);
 
 /**
  * Checks if queue is empty
@@ -53,7 +53,7 @@ void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned
 int find_extreme_in_primary(const Controller_t* ctrl);
 
 /**
- * Updates controller state
+ * Updates controller state, direction and motor direction
  * @param ctrl An elevator controller
  * */
-void up_or_down_from_idle(Controller_t* ctrl);
+void decide_next_elev_movement_from_queue(Controller_t* ctrl);

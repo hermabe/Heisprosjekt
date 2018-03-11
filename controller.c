@@ -22,21 +22,31 @@ void startup(Controller_t *ctrl) {
 }
 
 void wait_at_floor(Controller_t *ctrl) {
+    //Stop elevator and open door
     elev_set_motor_direction(DIRN_STOP);
     elev_set_door_open_lamp(1);
-    int msec = 0;
+
+    //Initialize timer
+    int counter = 0;
     int trigger = 3000;
     clock_t before = clock();
     clock_t difference;
+
+
     do {
+        //Monitor buttons
         if (check_stop(ctrl)){
             return;
         }        
         read_buttons_and_light_up_buttons();
         add_floors_in_queue(ctrl);
+
+        //Update timer
         difference = clock() - before;
-        msec = difference * 1000 / CLOCKS_PER_SEC;
-    } while (msec < trigger);
+        counter = difference * 1000 / CLOCKS_PER_SEC; //Update counter
+    } while (counter < trigger);
+
+    //Close door and change to IDLESTATE
     elev_set_door_open_lamp(0);
     ctrl->state = IDLESTATE;
 }
@@ -63,8 +73,7 @@ bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor) 
 void stop_if_reached_a_floor(Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
     update_floor_indicator(ctrl, floor);
-    if (remove_floor_from_queue_if_in_primary_queue(ctrl, floor))
-    {
+    if (remove_floor_from_queue_if_in_primary_queue(ctrl, floor)){
         reset_button_lights_at_floor(floor);
         ctrl->state = WAITSTATE;
     }

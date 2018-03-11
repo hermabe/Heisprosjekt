@@ -97,10 +97,8 @@ void activate_stop(Controller_t* ctrl){
     elev_set_stop_lamp(1);
     reset_button_lights_except_stop_light();
     clear_orders(ctrl);
-    if (elev_get_floor_sensor_signal() != -1)
-    {
-        elev_set_door_open_lamp(1);
-    }
+    open_door_if_at_floor()
+    
     while (elev_get_stop_signal())
     {
     }

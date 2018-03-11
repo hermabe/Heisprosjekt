@@ -23,7 +23,11 @@ typedef struct tag_controller{
 } Controller_t;
 
 #include "queue.h"
-
+/*
+ * Stops elevator, opens door and waits for three seconds while checking for buttoninput.
+ * When three seconds have passed, opens door
+ * @param ctrl a control struct
+ * */
 void wait_at_floor(Controller_t *ctrl);
 
 /**
@@ -41,18 +45,19 @@ void startup(Controller_t* ctrl);
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state);
 
 /*
-* Updates currentfloor in ctrl and indicator light
-* @param ctrl a control struct
-* @param floor to update
-*/
+ * Updates currentfloor in ctrl and indicator light
+ * @param ctrl a control struct
+ * @param floor to update
+ * */
 void update_floor(Controller_t *ctrl, int floor);
 
 /*
-Checks stopsignal and changes state if true
-*/
+ * Checks stopsignal and changes state if true
+ * @param ctrl a control struct
+ * */
 bool check_stop(Controller_t* ctrl);
 
-/****
+/*
  * Removes floor in the right direction 
  * @param ctrl a control struct
  * @param floor floor to remove
@@ -60,10 +65,10 @@ bool check_stop(Controller_t* ctrl);
 bool remove_floor(Controller_t *ctrl, int floor);
 
 /*
-* Check if one have reached a floor and checks queues and performes action
-* @param ctrl a control struct
-* @return true if floor removed from queue
-*/
+ * Check if one have reached a floor and checks queues and performes action
+ * @param ctrl a control struct
+ * @return true if floor removed from queue
+ */
 bool stop_if_reached_a_floor(Controller_t *ctrl);
 
 /**
@@ -71,6 +76,7 @@ bool stop_if_reached_a_floor(Controller_t *ctrl);
  * @param ctrl a ControllerStuct
  * */
 void run(Controller_t* ctrl);
+
 
 void toggle_direction(Controller_t* ctrl);
 

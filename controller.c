@@ -148,14 +148,16 @@ void open_door_if_at_floor(){
     }
 }
 
-elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor){    
-    if (ctrl->current_floor < floor){
+elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int destination_floor){    
+    if (ctrl->current_floor < destination_floor){
         return DIRN_UP;
     }
-    else if (ctrl->current_floor > floor){
+    else if (ctrl->current_floor > destination_floor){
         return DIRN_DOWN;
     }
     else {
+        //Only happens if stop button is pressed and the elevator has just left destination floor.
+        //It then goes the opposite direction to return to destination floor.
         return (elev_motor_direction_t)((int)(ctrl->direction) * -1);
     }
 }

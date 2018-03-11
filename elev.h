@@ -9,15 +9,11 @@
 // Number of floors
 #define N_FLOORS 4
 
-
-
 /**
   Initialize elevator.
   @return Non-zero on success, 0 on failure.
 */
 int elev_init(void);
-
-
 
 /**
   Motor direction for function elev_set_motor_direction().
@@ -28,15 +24,11 @@ typedef enum tag_elev_motor_direction {
     DIRN_UP = 1
 } elev_motor_direction_t;
 
-
-
 /**
   Sets the motor direction of the elevator.
   @param dirn New direction of the elevator.
 */
 void elev_set_motor_direction(elev_motor_direction_t dirn);
-
-
 
 /**
   Turn door-open lamp on or off.
@@ -45,22 +37,17 @@ void elev_set_motor_direction(elev_motor_direction_t dirn);
 void elev_set_door_open_lamp(int value);
 
 
-
 /**
   Get signal from obstruction switch.
   @return 1 if obstruction is enabled. 0 if not.
 */
 int elev_get_obstruction_signal(void);
 
-
-
 /**
   Get signal from stop button.
   @return 1 if stop button is pushed, 0 if not.
 */
 int elev_get_stop_signal(void);
-
-
 
 /**
   Turn stop lamp on or off.
@@ -81,7 +68,6 @@ int elev_get_floor_sensor_signal(void);
 */
 void elev_set_floor_indicator(int floor);
 
-
 /**
   Button types for function elev_set_button_lamp() and elev_get_button().
 */
@@ -90,8 +76,6 @@ typedef enum tag_elev_lamp_type {
     BUTTON_CALL_DOWN = 1,
     BUTTON_COMMAND = 2
 } elev_button_type_t;
-
-
 
 /**
   Gets a button signal.
@@ -102,8 +86,6 @@ typedef enum tag_elev_lamp_type {
 */
 int elev_get_button_signal(elev_button_type_t button, int floor);
 
-
-
 /**
   Set a button lamp.
   @param lamp Which type of lamp to set. Can be BUTTON_CALL_UP,
@@ -113,6 +95,12 @@ int elev_get_button_signal(elev_button_type_t button, int floor);
 */
 void elev_set_button_lamp(elev_button_type_t button, int floor, int value);
 
+/**
+  Gets wheter lamp in button is on.
+  @param button Which button type to check.
+  @param floor Which floor to check button.
+  @return 0 if lamp is not on. 1 if lamp is on.
+*/
 int elev_get_button_lamp(elev_button_type_t button, int floor);
 
 #endif // #ifndef __INCLUDE_DRIVER_H__

@@ -12,36 +12,46 @@ void startup(Controller_t *ctrl) {
         exit(1);
     }
 
-    initialize_controlstruct(ctrl, 0, IDLESTATE);
-
+    
     // Put elevator in 1st floor
     elev_set_motor_direction(DIRN_DOWN);
     while (elev_get_floor_sensor_signal() != (int)0) {}
     elev_set_motor_direction(DIRN_STOP);
+    initialize_controlstruct(ctrl, 0, IDLESTATE);
     printf("Initialization done\n");
 }
 
 void wait_at_floor(Controller_t *ctrl) {
+    //Stop elevator and open door
     elev_set_motor_direction(DIRN_STOP);
     elev_set_door_open_lamp(1);
-    int msec = 0;
+
+    //Initialize timer
+    int counter = 0;
     int trigger = 3000;
     clock_t before = clock();
     clock_t difference;
+
+
     do {
+        //Monitor buttons
         if (check_stop(ctrl)){
             return;
         }        
         read_buttons_and_light_up_buttons();
         add_floors_in_queue(ctrl);
+
+        //Update timer
         difference = clock() - before;
-        msec = difference * 1000 / CLOCKS_PER_SEC;
-    } while (msec < trigger);
+        counter = difference * 1000 / CLOCKS_PER_SEC; //Update counter
+    } while (counter < trigger);
+
+    //Close door and change to IDLESTATE
     elev_set_door_open_lamp(0);
     ctrl->state = IDLESTATE;
 }
 
-void update_floor(Controller_t *ctrl, int floor) {
+void update_floor_indicator(Controller_t *ctrl, int floor) {
     if (floor != -1)
     {
         ctrl->current_floor = floor;
@@ -49,7 +59,7 @@ void update_floor(Controller_t *ctrl, int floor) {
     }
 }
 
-bool remove_floor(Controller_t *ctrl, int floor) {    
+bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor) {    
     if (ctrl->queues[0][floor]){
         for (int queue = 0; queue < 3; queue++) {
             ctrl->queues[queue][floor] = 0;
@@ -60,24 +70,13 @@ bool remove_floor(Controller_t *ctrl, int floor) {
     }
 }
 
-bool stop_if_reached_a_floor(Controller_t *ctrl) {
+void stop_if_reached_a_floor(Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
-    update_floor(ctrl, floor);
-    if (ctrl->state == MOVESTATE && remove_floor(ctrl, floor))
-    {
+    update_floor_indicator(ctrl, floor);
+    if (remove_floor_from_queue_if_in_primary_queue(ctrl, floor)){
         reset_button_lights_at_floor(floor);
         ctrl->state = WAITSTATE;
-        return true;
     }
-    return false;
-}
-
-bool check_stop(Controller_t* ctrl){
-    if (elev_get_stop_signal()) {
-        ctrl->state = STOPSTATE;
-        return true;
-    }
-    return false;
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
@@ -92,18 +91,27 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
     }
 }
 
+bool check_stop(Controller_t* ctrl){
+    if (elev_get_stop_signal()) {
+        ctrl->state = STOPSTATE;
+        return true;
+    }
+    return false;
+}
+
 void activate_stop(Controller_t* ctrl){
+    //Stop elevator and activate stop lamp
     elev_set_motor_direction(DIRN_STOP);
     elev_set_stop_lamp(1);
+
+    //Clears lights and queue
     reset_button_lights_except_stop_light();
     clear_orders(ctrl);
-    if (elev_get_floor_sensor_signal() != -1)
-    {
-        elev_set_door_open_lamp(1);
-    }
-    while (elev_get_stop_signal())
-    {
-    }
+
+
+    open_door_if_at_floor()
+    
+    while (elev_get_stop_signal()) {} //Waits until stop button is released
     elev_set_stop_lamp(0);
     ctrl->state = IDLESTATE;
 }
@@ -112,14 +120,14 @@ void run(Controller_t* ctrl){
     while(true){
         check_stop(ctrl);        
         read_buttons_and_light_up_buttons();
-        add_floors_in_queue(ctrl);
+        add_floors_in_queue_from_lights(ctrl);
 
         switch (ctrl->state){
             case STOPSTATE:
                 activate_stop(ctrl);
                 break;  
             case IDLESTATE:
-                up_or_down_from_idle(ctrl);             
+                decide_next_elev_movement_from_queue(ctrl);      
                 break;
             case MOVESTATE:
                 stop_if_reached_a_floor(ctrl);
@@ -128,6 +136,8 @@ void run(Controller_t* ctrl){
                 wait_at_floor(ctrl);                
                 break;
             default:
+                //Not supposed to happen, but if it does, it stops the elevator, because something is wrong
+                ctrl->state = STOPSTATE
                 break;
         }
     }
@@ -143,19 +153,23 @@ void toggle_direction(Controller_t* ctrl){
 }
 
 void open_door_if_at_floor(){
-    if (elev_get_floor_sensor_signal() == -1){
+    //If at floor
+    if (elev_get_floor_sensor_signal() != -1){
+        //open door
         elev_set_door_open_lamp(1);
     }
 }
 
-elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int floor){    
-    if (ctrl->current_floor < floor){
+elev_motor_direction_t get_direction_from_current_and_destination_floor(Controller_t* ctrl, int destination_floor){    
+    if (ctrl->current_floor < destination_floor){
         return DIRN_UP;
     }
-    else if (ctrl->current_floor > floor){
+    else if (ctrl->current_floor > destination_floor){
         return DIRN_DOWN;
     }
     else {
+        //Only happens if stop button is pressed and the elevator has just left destination floor.
+        //It then goes the opposite direction to return to destination floor.
         return (elev_motor_direction_t)((int)(ctrl->direction) * -1);
     }
 }

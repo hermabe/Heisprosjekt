@@ -141,7 +141,9 @@ void toggle_direction(Controller_t* ctrl){
 }
 
 void open_door_if_at_floor(){
+    //If at floor
     if (elev_get_floor_sensor_signal() != -1){
+        //open door
         elev_set_door_open_lamp(1);
     }
 }

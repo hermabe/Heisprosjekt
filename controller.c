@@ -100,10 +100,15 @@ bool check_stop(Controller_t* ctrl){
 }
 
 void activate_stop(Controller_t* ctrl){
+    //Stop elevator and activate stop lamp
     elev_set_motor_direction(DIRN_STOP);
     elev_set_stop_lamp(1);
+
+    //Clears lights and queue
     reset_button_lights_except_stop_light();
     clear_orders(ctrl);
+
+
     open_door_if_at_floor()
     
     while (elev_get_stop_signal()) {} //Waits until stop button is released

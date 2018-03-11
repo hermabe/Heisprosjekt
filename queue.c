@@ -100,3 +100,14 @@ void decide_next_elev_movement_from_queue(Controller_t* ctrl) {
         ctrl->state = MOVESTATE;        
     }
 }
+
+bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor) {    
+    if (ctrl->queues[0][floor]){
+        for (int queue = 0; queue < 3; queue++) {
+            ctrl->queues[queue][floor] = 0;
+        }   
+        return true;
+    } else {
+        return false;
+    }
+}

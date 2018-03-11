@@ -57,3 +57,10 @@ int find_extreme_in_primary(const Controller_t* ctrl);
  * @param ctrl An elevator controller
  * */
 void decide_next_elev_movement_from_queue(Controller_t* ctrl);
+
+/*
+ * Removes floor in all queues if it is in primary queue 
+ * @param ctrl a control struct
+ * @param floor floor to remove
+ */
+bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor);

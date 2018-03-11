@@ -59,17 +59,6 @@ void update_floor_indicator(Controller_t *ctrl, int floor) {
     }
 }
 
-bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor) {    
-    if (ctrl->queues[0][floor]){
-        for (int queue = 0; queue < 3; queue++) {
-            ctrl->queues[queue][floor] = 0;
-        }   
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void stop_if_reached_a_floor(Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
     update_floor_indicator(ctrl, floor);
@@ -109,7 +98,7 @@ void activate_stop(Controller_t* ctrl){
     clear_orders(ctrl);
 
 
-    open_door_if_at_floor()
+    open_door_if_at_floor();
     
     while (elev_get_stop_signal()) {} //Waits until stop button is released
     elev_set_stop_lamp(0);
@@ -137,7 +126,7 @@ void run(Controller_t* ctrl){
                 break;
             default:
                 //Not supposed to happen, but if it does, it stops the elevator, because something is wrong
-                ctrl->state = STOPSTATE
+                ctrl->state = STOPSTATE;
                 break;
         }
     }

@@ -12,12 +12,12 @@ void startup(Controller_t *ctrl) {
         exit(1);
     }
 
-    initialize_controlstruct(ctrl, 0, IDLESTATE);
-
+    
     // Put elevator in 1st floor
     elev_set_motor_direction(DIRN_DOWN);
     while (elev_get_floor_sensor_signal() != (int)0) {}
     elev_set_motor_direction(DIRN_STOP);
+    initialize_controlstruct(ctrl, 0, IDLESTATE);
     printf("Initialization done\n");
 }
 

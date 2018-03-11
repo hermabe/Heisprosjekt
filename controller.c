@@ -72,14 +72,6 @@ bool stop_if_reached_a_floor(Controller_t *ctrl) {
     return false;
 }
 
-bool check_stop(Controller_t* ctrl){
-    if (elev_get_stop_signal()) {
-        ctrl->state = STOPSTATE;
-        return true;
-    }
-    return false;
-}
-
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {
     ctrl->current_floor = current_floor;
     ctrl->state = state;
@@ -90,6 +82,14 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
             ctrl->queues[i][j] = 0;
         }
     }
+}
+
+bool check_stop(Controller_t* ctrl){
+    if (elev_get_stop_signal()) {
+        ctrl->state = STOPSTATE;
+        return true;
+    }
+    return false;
 }
 
 void activate_stop(Controller_t* ctrl){
@@ -141,7 +141,7 @@ void toggle_direction(Controller_t* ctrl){
 }
 
 void open_door_if_at_floor(){
-    if (elev_get_floor_sensor_signal() == -1){
+    if (elev_get_floor_sensor_signal() != -1){
         elev_set_door_open_lamp(1);
     }
 }

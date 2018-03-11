@@ -1,6 +1,6 @@
 #pragma once
 #include "elev.h"
-#include "queue.h"
+#include "buttonOperations.h"
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -22,6 +22,7 @@ typedef struct tag_controller{
     bool queues[3][4];
 } Controller_t;
 
+#include "queue.h"
 
 void wait_at_floor(Controller_t *ctrl);
 

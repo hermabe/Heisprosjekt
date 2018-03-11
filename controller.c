@@ -32,7 +32,7 @@ void wait_at_floor(Controller_t *ctrl) {
         if (check_stop(ctrl)){
             return;
         }        
-        read_buttons_and_light_up_button();
+        read_buttons_and_light_up_buttons();
         add_floors_in_queue(ctrl);
         difference = clock() - before;
         msec = difference * 1000 / CLOCKS_PER_SEC;
@@ -95,7 +95,7 @@ void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, St
 void activate_stop(Controller_t* ctrl){
     elev_set_motor_direction(DIRN_STOP);
     elev_set_stop_lamp(1);
-    reset_all_lights_except_stop_light();
+    reset_button_lights_except_stop_light();
     clear_orders(ctrl);
     if (elev_get_floor_sensor_signal() != -1)
     {
@@ -111,7 +111,7 @@ void activate_stop(Controller_t* ctrl){
 void run(Controller_t* ctrl){
     while(true){
         check_stop(ctrl);        
-        read_buttons_and_light_up_button();
+        read_buttons_and_light_up_buttons();
         add_floors_in_queue(ctrl);
 
         switch (ctrl->state){

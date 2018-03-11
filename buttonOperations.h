@@ -18,4 +18,4 @@ void reset_button_lights_at_floor(int floor);
 /**
  * Resets all light except lamp
 */
-void reset_button_lights_except_stop_lamp();
+void reset_button_lights_except_stop_light();

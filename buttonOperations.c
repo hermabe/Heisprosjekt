@@ -16,7 +16,7 @@ void reset_button_lights_at_floor(int floor) {
     }
 }
 
-void reset_all_lights_except_stop_light() {
+void reset_button_lights_except_stop_light() {
     for (int floor=0; floor < 4; floor++) {
         reset_button_lights_at_floor(floor);
     }

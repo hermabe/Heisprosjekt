@@ -25,69 +25,12 @@ void add_floors_in_queue(Controller_t *ctrl) {
 void add_button_to_queue(Controller_t *ctrl, elev_button_type_t button, unsigned int floor) {
     bool floor_above_elevator = (floor > ctrl->current_floor);
 
-    // Alternative version
+    // Look-up-table instead of lots of ifs
+    // 0 is primary queue, 1 is secondary queue, 2 is extra queue
     int queueSelectorArray[18] = {1, 0, 2, 1, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 1, 1, 0, 0};
     int index = button*6 + floor_above_elevator*3 + 1 + ctrl->direction;
     int queue = queueSelectorArray[index];
     ctrl->queues[queue][floor] = true;
-    return;
-
-    // Original version, proven to work
-    switch (button) {
-        case BUTTON_CALL_UP: {
-            if (floor_above_elevator) {
-                if (ctrl->direction >= 0) {
-                    ctrl->queues[0][floor] = true; //Add in primary queue
-                } else {
-                    ctrl->queues[1][floor] = true; //Add in secondary queue
-                }
-            } else {
-                if (ctrl->direction > 0) {
-                    ctrl->queues[2][floor] = true; //Add in extra queue
-                } else if (ctrl->direction < 0){
-                    ctrl->queues[1][floor] = true; //add in secondary queue
-                } else {
-                    ctrl->queues[0][floor] = true;
-                }
-            }
-            break;
-        }
-        case BUTTON_CALL_DOWN: {
-            if (floor_above_elevator) {
-                if (ctrl->direction > 0) {
-                    ctrl->queues[1][floor] = true; 
-                } else if (ctrl->direction < 0){
-                    ctrl->queues[2][floor] = true;
-                } else {
-                    ctrl->queues[0][floor] = true;
-                }
-                
-            } else {
-                
-                if (ctrl->direction <= 0) {
-                    ctrl->queues[0][floor] = true; 
-                } else { 
-                    ctrl->queues[1][floor] = true; 
-                }
-            }
-            break;
-        }
-        case BUTTON_COMMAND: {
-            if (floor_above_elevator) {
-                if (ctrl->direction < 0) {
-                    ctrl->queues[1][floor] = true;
-                } else {
-                    ctrl->queues[0][floor] = true;
-                }
-            } else {
-                if (ctrl->direction > 0) {
-                    ctrl->queues[1][floor] = true;
-                } else {
-                    ctrl->queues[0][floor] = true;
-                }
-            }
-        }
-    }
 }
 
 bool is_queue_empty(const bool queue[], const int size) {

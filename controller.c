@@ -99,9 +99,7 @@ void activate_stop(Controller_t* ctrl){
     clear_orders(ctrl);
     open_door_if_at_floor()
     
-    while (elev_get_stop_signal())
-    {
-    }
+    while (elev_get_stop_signal()) {} //Waits until stop button is released
     elev_set_stop_lamp(0);
     ctrl->state = IDLESTATE;
 }

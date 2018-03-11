@@ -39,7 +39,7 @@ void wait_at_floor(Controller_t *ctrl) {
             return;
         }        
         read_buttons_and_light_up_buttons();
-        add_floors_in_queue(ctrl);
+        add_floors_in_queue_from_lights(ctrl);
 
         //Update timer
         difference = clock() - before;

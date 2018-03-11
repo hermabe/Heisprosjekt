@@ -97,7 +97,8 @@ void decide_next_elev_movement_from_queue(Controller_t* ctrl) {
         elev_motor_direction_t direction = get_direction_from_current_and_destination_floor(ctrl, extreme);
         elev_set_motor_direction(direction);
         ctrl->direction = direction;
-        ctrl->state = MOVESTATE;        
+        ctrl->state = MOVESTATE;
+	elev_set_door_open_lamp(0); //Close door before moving
     }
 }
 

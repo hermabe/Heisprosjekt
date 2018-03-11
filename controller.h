@@ -22,7 +22,8 @@ typedef struct tag_controller{
     bool queues[3][4];
 } Controller_t;
 
-#include "queue.h" //Controller_t is needed in queue 
+//Controller_t is needed in queue.h
+#include "queue.h" 
 
 
 /**

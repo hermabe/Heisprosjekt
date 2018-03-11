@@ -43,21 +43,21 @@ void wait_at_floor(Controller_t *ctrl);
  * @param ctrl a control struct
  * @param floor to update
  * */
-void update_floor(Controller_t *ctrl, int floor);
+void update_floor_indicator(Controller_t *ctrl, int floor);
 
 /*
  * Removes floor in all queues if it is in primary queue 
  * @param ctrl a control struct
  * @param floor floor to remove
  */
-bool remove_floor(Controller_t *ctrl, int floor);
+bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor);
 
 /*
  * Check if one have reached a floor and checks queues and performes action
  * @param ctrl a control struct
  * @return true if floor removed from queue
  */
-bool stop_if_reached_a_floor(Controller_t *ctrl);
+void stop_if_reached_a_floor(Controller_t *ctrl);
 
 /**
  * Initializes the controlstruct

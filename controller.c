@@ -41,7 +41,7 @@ void wait_at_floor(Controller_t *ctrl) {
     ctrl->state = IDLESTATE;
 }
 
-void update_floor(Controller_t *ctrl, int floor) {
+void update_floor_indicator(Controller_t *ctrl, int floor) {
     if (floor != -1)
     {
         ctrl->current_floor = floor;
@@ -49,7 +49,7 @@ void update_floor(Controller_t *ctrl, int floor) {
     }
 }
 
-bool remove_floor(Controller_t *ctrl, int floor) {    
+bool remove_floor_from_queue_if_in_primary_queue(Controller_t *ctrl, int floor) {    
     if (ctrl->queues[0][floor]){
         for (int queue = 0; queue < 3; queue++) {
             ctrl->queues[queue][floor] = 0;
@@ -60,16 +60,14 @@ bool remove_floor(Controller_t *ctrl, int floor) {
     }
 }
 
-bool stop_if_reached_a_floor(Controller_t *ctrl) {
+void stop_if_reached_a_floor(Controller_t *ctrl) {
     int floor = elev_get_floor_sensor_signal();
-    update_floor(ctrl, floor);
-    if (ctrl->state == MOVESTATE && remove_floor(ctrl, floor))
+    update_floor_indicator(ctrl, floor);
+    if (remove_floor_from_queue_if_in_primary_queue(ctrl, floor))
     {
         reset_button_lights_at_floor(floor);
         ctrl->state = WAITSTATE;
-        return true;
     }
-    return false;
 }
 
 void initialize_controlstruct(Controller_t *ctrl, unsigned int current_floor, State_t state) {

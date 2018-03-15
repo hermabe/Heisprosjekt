@@ -1,8 +1,7 @@
-#include "elev.h"
 #include <stdio.h>
 #include "io.h"
+#include "elev.h"
 #include "channels.h"
-#include "controller.h"
 
 /**
  * Read buttons and turn on lights if button pressed

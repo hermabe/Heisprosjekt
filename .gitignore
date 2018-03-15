@@ -4,8 +4,7 @@
 #ignore settings
 c_cpp_properties.json
 
-# Pictures
-*.png
+
 
 # Object files
 *.o

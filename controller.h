@@ -32,6 +32,12 @@ typedef struct tag_controller{
  */
 void startup(Controller_t* ctrl);
 
+/**
+ * Handles orders and controls the elevator
+ * @param ctrl a control stuct
+ * */
+void run(Controller_t* ctrl);
+
 /*
  * Stops elevator, opens door and waits for three seconds while checking for buttoninput.
  * When three seconds have passed, opens door
@@ -73,13 +79,6 @@ bool check_stop(Controller_t* ctrl);
  * @param ctrl a control struct
  * */
 void activate_stop(Controller_t* ctrl);
-
-
-/**
- * Handles orders and controls the elevator
- * @param ctrl a control stuct
- * */
-void run(Controller_t* ctrl);
 
 /****
  * Changes to opposite direction in controller struct

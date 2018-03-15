@@ -1,1 +1,46 @@
-List for Use Case Diagram
+List for use case diagram:
+Main success scenario with extensions
+	1. Customer presses up/down-button.
+	2. System orders elevator to go to customer floor and opens door.
+		a. Elevator is going the opposite direction
+			i. Elevator doesn't stop unless someone wants to go down, or someone in the elevator has selected the floor.
+			ii. When Elevator is going the same direction as desired floor movement ->  2.
+	3. Customer goes in the elevator
+	4. Customer presses a floor button to select a floor.
+		a. Stop-button is pressed
+			i. Reset all buttons
+			ii. If on floor -> open door
+			iii.  -> 4.c.ii
+		b. Presses multiple buttons
+			i. Add selected floors in queue.
+		c. Presses the same floor button as current floor.
+			i. "Close door"-timer resets
+		d. Doesn't press button.
+			i. Close door after three seconds.
+			ii. Wait until button press. If
+				? Up/down -> 1.
+				? Floor button -> 3.
+	5. System closes door after three seconds
+	6. Moves in desired direction.
+		a. Presses one or more buttons
+			i. Stop-button is pressed -> 4.a.i
+			ii. Multiple buttons ->  Add selected floors in queue.
+	7. Elevator stops in next selected floor on the way
+		a. Presses one or more buttons
+			i. Stop-button is pressed -> 4.a.i
+			ii. Multiple buttons ->  Add selected floors in queue.
+	8. System opens door.
+		a. Presses one or more buttons
+			i. Stop-button is pressed -> 4.a.i
+			ii. Same floor as current ->  4.c.i
+			iii. Multiple buttons-> 4.b.i
+		b.  If
+			i. queue empty ->  4.d.i
+			ii. Else -> 5.
+		
+	
+	
+	
+	
+		
+	

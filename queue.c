@@ -53,8 +53,8 @@ bool is_all_queues_empty(Controller_t *ctrl) {
 }
 
 int find_extreme_in_primary(const Controller_t* ctrl){
-    // If elevator is going down, return floor closest to 1 that has an order
-    if (ctrl->direction == DIRN_DOWN){
+    // If elevator is going up, return floor closest to 1 that has an order
+    if (ctrl->direction == DIRN_UP){
         for(int i = 0; i < 4; ++i) {
             if (ctrl->queues[0][i]) {
                 return i;
